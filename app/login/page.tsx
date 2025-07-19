@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd } from "lucide-react"
+
 
 import { Login2 } from "@/components/login2"
 

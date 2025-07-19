@@ -7,7 +7,7 @@ const Service = () => {
      return(
         <div className=" flex flex-col justify-center items-center relative gap-[1%] mt-[5%] mb-[5%]">
             <h1 className="text-[2rem] font-bold">Nous vous procurons les meilleurs <span className="text-[#FB953C]">Services</span></h1>
-            <p className="text-[1.2rem]">Toujours a la une de l'innovation vivez une esperience incroyable</p>
+            <p className="text-[1.2rem]">Toujours a la une de l&apos innovation vivez une esperience incroyable</p>
             <div className="flex flex-wrap justify-center items-center gap-[2%] mt-[5%]">
                 {
                     Services.map((service) => (

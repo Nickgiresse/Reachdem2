@@ -13,7 +13,7 @@ const Lien =[
         href: "/"
     },
     {   
-        
+
         id: 3,
         nom:"Tarif",
         href: "/"
@@ -39,8 +39,8 @@ const Header = () => {
             </nav>
             <div className="h-full flex flex-row items-center justify-end w-full pr-20">
                 <div className="h-[30%] flex flex-col  justify-around w-[40%] gap-[7%]">
-                    <h1 className="text-[2rem] font-bold"><span className="text-[#FB953C]">Atteignez-les</span> où qu'ils se trouvent</h1>
-                    <p className='text-[0.7rem]'>Maximisez l'impact de vos communications en touchant tous vos client grace a la grande puissances des SMS</p>
+                    <h1 className="text-[2rem] font-bold"><span className="text-[#FB953C]">Atteignez-les</span> où qu &apos ils se trouvent</h1>
+                    <p className='text-[0.7rem]'>Maximisez l &apos impact de vos communications en touchant tous vos client grace a la grande puissances des SMS</p>
                     <Link href="/login" className="bg-[#FB953C] w-max pl-4 pr-4 p-2 rounded-[5px] font-medium text-white hover:bg-[#d6690aff]">Commencer maintenant</Link> 
 
                 </div>

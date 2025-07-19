@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation"
+
 
 interface Signup1Props {
   heading?: string;
