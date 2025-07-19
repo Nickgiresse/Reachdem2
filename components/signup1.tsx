@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 interface Signup1Props {
   heading?: string;
-  logo: {
+  logo?: {
     url: string;
     src: string;
     alt: string;
