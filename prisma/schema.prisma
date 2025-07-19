@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  emailVerified Boolean  @default(false) // Boolean au lieu de DateTime
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations pour Better Auth
+  sessions    Account[]
+  accounts    Session[]
+  UserProfile UserProfile?
+  Project     Project[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+model UserProfile {
+  id              String      @id @default(cuid())
+  userId          String      @unique
+  account_type    AccountType
+  is_admin        Boolean     @default(false)
+  is_ban          Boolean     @default(false)
+  kyc_objects     String[]
+  first_name      String
+  last_name       String
+  phone           String?
+  city            String?
+  country         String?
+  locale          Locale      @default(FR)
+  slug            String?
+  last_connection DateTime?
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Project {
+  project_id  String      @id @default(cuid())
+  sender_name String
+  sms_credit  Int         @default(0)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  user_id     String
+  campaigns   Campaign[]
+  phonebooks  Phonebook[]
+  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("projects")
+}
+
+model Phonebook {
+  phonebook_id String    @id @default(cuid())
+  project_id   String
+  name         String
+  description  String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  contacts     Contact[]
+  project      Project   @relation(fields: [project_id], references: [project_id], onDelete: Cascade)
+
+  @@map("phonebooks")
+}
+
+model Contact {
+  contact_id   String         @id @default(cuid())
+  phonebook_id String
+  first_name   String
+  last_name    String
+  phone        String
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  phonebook    Phonebook      @relation(fields: [phonebook_id], references: [phonebook_id], onDelete: Cascade)
+  groups       GroupContact[]
+
+  @@map("contacts")
+}
+
+model Group {
+  group_id    String         @id @default(cuid())
+  name        String
+  description String?
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+  campaigns   Campaign[]
+  contacts    GroupContact[]
+
+  @@map("groups")
+}
+
+model GroupContact {
+  group_id   String
+  contact_id String
+  added_at   DateTime @default(now())
+  contact    Contact  @relation(fields: [contact_id], references: [contact_id], onDelete: Cascade)
+  group      Group    @relation(fields: [group_id], references: [group_id], onDelete: Cascade)
+
+  @@id([group_id, contact_id])
+  @@map("group_contacts")
+}
+
+model Message {
+  message_id       String            @id @default(cuid())
+  delivered_status DeliveryStatus    @default(PENDING)
+  content          String
+  sent_at          DateTime?
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+  campaigns        CampaignMessage[]
+
+  @@map("messages")
+}
+
+model Campaign {
+  campaign_id  String            @id @default(cuid())
+  project_id   String
+  group_id     String
+  name         String
+  scheduled_at DateTime?
+  status       CampaignStatus    @default(DRAFT)
+  created_at   DateTime          @default(now())
+  updated_at   DateTime          @updatedAt
+  messages     CampaignMessage[]
+  group        Group             @relation(fields: [group_id], references: [group_id], onDelete: Cascade)
+  project      Project           @relation(fields: [project_id], references: [project_id], onDelete: Cascade)
+
+  @@map("campaigns")
+}
+
+model CampaignMessage {
+  campaign_id String
+  message_id  String
+  order       Int      @default(0)
+  created_at  DateTime @default(now())
+  campaign    Campaign @relation(fields: [campaign_id], references: [campaign_id], onDelete: Cascade)
+  message     Message  @relation(fields: [message_id], references: [message_id], onDelete: Cascade)
+
+  @@id([campaign_id, message_id])
+  @@map("campaign_messages")
+}
+
+enum AccountType {
+  INDIVIDUAL
+  BUSINESS
+  ENTERPRISE
+}
+
+enum Locale {
+  FR
+  EN
+  ES
+  DE
+  IT
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  EXPIRED
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  RUNNING
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
