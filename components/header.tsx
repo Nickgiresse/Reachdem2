@@ -20,11 +20,15 @@ const Lien =[
         href: "/"
     }
 ]
-
-interface HeaderProps {
-    session: any;
+interface HeaderClientProps {
+    session: {
+        user?: {
+            id: string;
+            email: string;
+            name?: string;
+        };
+    } | null; 
 }
-
 const Header = ({ session }: HeaderProps) => {
     const router = useRouter()
     
