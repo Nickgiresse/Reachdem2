@@ -1,12 +1,12 @@
 
-import Header from "../components/header";
+import HeaderWrapper from "@/components/header-wrapper"
 import Service from "../components/service";
 import Apropos from "../components/apropos"
 
-export default function Home() {
+export default async function Home() {
   return (
     <div>
-        <Header />
+        <HeaderWrapper />
         <Service />
         <Apropos />
     </div>

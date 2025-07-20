@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation"
 
 
 interface Signup1Props {
   heading?: string;
-  logo: {
+  logo?: {
     url: string;
     src: string;
     alt: string;
@@ -34,9 +35,11 @@ const Signup1 = ({
   loginText = "Already have an account?",
   loginUrl = "/login",
 }: Signup1Props) => {
+  const router = useRouter()
    async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+    
     evt.preventDefault();
-    console.log("un submit")
+   
     const formData = new FormData(evt.target as HTMLFormElement);
     const name = String(formData.get("name"));
     if (!name) return toast.error("please enter your name");
@@ -47,7 +50,7 @@ const Signup1 = ({
     const password = String(formData.get("password"));
     if (!password) return toast.error("please enter your password");
 
-    console.log({name, email, password});
+   
  
     
 
@@ -62,9 +65,10 @@ const Signup1 = ({
         onResponse: () => {},
         onError: (ctx) => {
           toast.error(ctx.error.message);
-          console.log("mauvais")
+        
         },
-        onSuccess: () => {console.log("bien bien")},
+        onSuccess: () => { router.push("/")},
+       
       }
     );
     
