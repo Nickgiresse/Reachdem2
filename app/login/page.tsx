@@ -1,11 +1,10 @@
-
+"use client"
 
 import { Login2 } from "@/components/login2"
 
 export default function LoginPage() {
   return (
-      <div>
-        
+      <div
             <Login2 
               logo={{
                 url: "/",

@@ -4,10 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { signIn } from "@/lib/auth-client"
+
+
+
+
 
 interface Login2Props {
   heading?: string;
-  logo: {
+  logo?: {
     url: string;
     src: string;
     alt: string;
@@ -32,8 +39,37 @@ const Login2 = ({
   signupText = "Need an account?",
   signupUrl = "/singup",
 }: Login2Props) => {
+  const router = useRouter()
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+    
     evt.preventDefault();
+    const formData = new FormData(evt.target as HTMLFormElement);
+    const email = String(formData.get("email"))
+    if (!email) return toast.error("Please enter your email");
+
+    const password = String(formData.get("password"));
+    if (!password) return toast.error("Please enter your password")
+    
+    console.log({email,password});
+    await signIn.email(
+      {
+        email,
+        password
+      },
+      {
+        onRequest: () => {},
+        onResponse: () => {},
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onSuccess: () =>{
+          console.log("bien");
+          router.push("/")
+          
+        }
+      }
+    )
+    
   }
   return (
     <section className="bg-muted h-screen">
@@ -54,21 +90,23 @@ const Login2 = ({
             
               {heading && <h1 className="text-xl font-semibold">{heading}</h1>}
               <div className="flex w-full flex-col gap-2">
-                <Label>Email</Label>
+                {/* <Label>Email</Label> */}
                 <Input
                   type="email"
+                  name="email"
                   placeholder="Email"
                   className="text-sm"
-                  required
+                 
                 />
               </div>
               <div className="flex w-full flex-col gap-2">
-                <Label>Password</Label>
+                {/* <Label>Password</Label> */}
                 <Input
                   type="password"
+                  name="password"
                   placeholder="Password"
                   className="text-sm"
-                  required
+                 
                 />
               </div>
               <Button type="submit" className="w-full bg-[#FB953C] hover:bg-[#d6690aff]">
