@@ -29,7 +29,7 @@ interface HeaderClientProps {
         };
     } | null; 
 }
-const Header = ({ session }: HeaderProps) => {
+const Header = ({ session }:HeaderClientProps) => {
     const router = useRouter()
     
     async function clicStart() {
