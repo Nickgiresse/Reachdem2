@@ -7,7 +7,7 @@ interface BackButtonProps{
     label?:string;
 }
 
-export const BackButton =({href, label}: BackButtoProps)=>{
+export const BackButton =({href, label}: BackButtonProps)=>{
     return(
         <Button size="sm" asChild className="bg-white text-black hover:bg-gray-200">
             <Link href={href}>
