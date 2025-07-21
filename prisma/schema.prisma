@@ -9,19 +9,17 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String   @unique
-  emailVerified Boolean  @default(false) // Boolean au lieu de DateTime
+  email         String       @unique
+  emailVerified Boolean      @default(false)
   image         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  // Relations pour Better Auth
-  sessions    Account[]
-  accounts    Session[]
-  UserProfile UserProfile?
-  Project     Project[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  sessions      Account[]
+  Project       Project[]
+  accounts      Session[]
+  UserProfile   UserProfile?
 
   @@map("user")
 }
@@ -35,8 +33,7 @@ model Session {
   userAgent String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("session")
 }
@@ -55,8 +52,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }

@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 // import { PrismaClient } from "@prisma/client"; // Adjust the import path as necessary
 import { prisma } from "@/lib/prisma";
+import { hashPassword, verifyPassword } from "@/lib/argon2";
 
 
  
@@ -11,12 +12,22 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
         
-
+ 
     }),
    emailAndPassword: {  
         enabled: true,
         minPasswordLength: 6,
+        autoSignIn: false,
         requireEmailVerification: false, // Optional, set to true if you want to require email verification
+        password:{
+            hash: hashPassword, 
+            verify: verifyPassword,
+        },
+    },
+    advanced: {
+        database:{
+            generateId: false,
+        },
     },
     // socialProviders: { 
     //     github: { 

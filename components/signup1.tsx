@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"
-
+import { useState } from "react";
+import { BackButton } from "@/components/back-button"
 
 interface Signup1Props {
   heading?: string;
@@ -36,6 +37,7 @@ const Signup1 = ({
   loginUrl = "/login",
 }: Signup1Props) => {
   const router = useRouter()
+  const [isPending, setisPending]= useState(false)
    async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     
     evt.preventDefault();
@@ -61,20 +63,22 @@ const Signup1 = ({
         password
       },
       {
-        onRequest: () => {}, 
-        onResponse: () => {},
+        onRequest: () => {setisPending(true)}, 
+        onResponse: () => {setisPending(false)},
         onError: (ctx) => {
           toast.error(ctx.error.message);
         
         },
-        onSuccess: () => { router.push("/")},
+        onSuccess: () => {toast.success("Sign Up successful, please log in"); router.push("/login")},
        
       }
     );
     
   }
   return (
-    <section className="bg-muted h-screen">
+    <section className="bg-muted h-screen p-2">
+      <BackButton href="/" label="Home" />
+        
       <div className="flex flex-col h-full items-center justify-center gap-4">
         <div className="flex flex-col items-center gap-y-2">
             {/* Logo */}
@@ -107,7 +111,7 @@ const Signup1 = ({
                 <Input type="password" id="password" name="password" placeholder="Password"/>
               </div>
               <div className="flex flex-col gap-4">
-                <Button type="submit" className="mt-2 w-full bg-[#FB953C] hover:bg-[#d6690aff]">
+                <Button type="submit" className="mt-2 w-full bg-[#FB953C] hover:bg-[#d6690aff]" disabled={isPending}>
                   {signupText}
                 </Button>
                 <Button variant="outline" className="w-full">
