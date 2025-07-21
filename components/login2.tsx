@@ -7,6 +7,8 @@ import React from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { signIn } from "@/lib/auth-client"
+import { useState } from "react";
+import { BackButton } from "@/components/back-button"
 
 
 
@@ -40,6 +42,8 @@ const Login2 = ({
   signupUrl = "/singup",
 }: Login2Props) => {
   const router = useRouter()
+  const [isPending, setisPending]= useState(false)
+
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     
     evt.preventDefault();
@@ -57,13 +61,13 @@ const Login2 = ({
         password
       },
       {
-        onRequest: () => {},
-        onResponse: () => {},
+        onRequest: () => {setisPending(true)}, 
+        onResponse: () => {setisPending(false)},
         onError: (ctx) => {
           toast.error(ctx.error.message);
         },
         onSuccess: () =>{
-          console.log("bien");
+          toast.success("Login successful");
           router.push("/")
           
         }
@@ -72,7 +76,9 @@ const Login2 = ({
     
   }
   return (
-    <section className="bg-muted h-screen">
+    <section className="bg-muted h-screen p-2">
+      <BackButton href="/" label="Home" />
+        
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-6 lg:justify-start">
           {/* Logo */}
@@ -109,7 +115,7 @@ const Login2 = ({
                  
                 />
               </div>
-              <Button type="submit" className="w-full bg-[#FB953C] hover:bg-[#d6690aff]">
+              <Button type="submit" className="w-full bg-[#FB953C] hover:bg-[#d6690aff]" disabled={isPending}>
                 {buttonText}
               </Button>
               <Button variant="outline" className="w-full">

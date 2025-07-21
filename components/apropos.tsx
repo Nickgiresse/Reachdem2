@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const Apropos = () => {
   return (
-    <div className=" flex flex-row items-center justify-end mt-10 pr-15 bg-cover w-full h-screen bg-[url(/fontbody.png)]">
-      <div className="w-[40%] flex flex-col gap-[20%]">
+    <div className=" flex flex-row items-center justify-end mt-10 sm:pr-15 bg-cover w-full py-20 px-10 sm:h-screen bg-[#e6e6e6ec] sm:bg-[url(/fontbody.png)]">
+      <div className="sm:w-[40%] flex flex-col gap-[20%]">
         {AproposDetail.map((apropos) => {
           return (
             <div key={apropos.id} className=" w-full flex flex-col gap-[20%] ">
