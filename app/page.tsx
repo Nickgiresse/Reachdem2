@@ -5,18 +5,23 @@ import Apropos from "../components/apropos";
 import GridPrix from "../components/grid-prix";
 import Footer from "@/components/footer"
 
-
 export default async function Home() {
   return (
     <div>
+     
         <HeaderWrapper />
+    
+     
         <Service />
+     
         <Apropos />
+     
         <GridPrix />
-        <hr/>
-
+     
+      <hr/>
+      
         <Footer />
-
+      
     </div>
   );
 }

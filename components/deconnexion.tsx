@@ -5,8 +5,12 @@ import { signOut } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useState } from "react";
 
+interface butProps{
+    className?: string
+    text?:string
+}
 
-export const Deconnexion = () => {
+export const Deconnexion = ({className,text}:butProps) => {
     const router = useRouter()
     const [isPending, setisPending]= useState(false)
     
@@ -27,8 +31,8 @@ export const Deconnexion = () => {
         )
     }
     return(
-        <Button onClick={handleClick} size="sm" variant="destructive" disabled={isPending}>
-            Deconnexion
+        <Button onClick={handleClick} className={className}  variant="destructive" disabled={isPending}>
+            {text}
         </Button>
     )
 }

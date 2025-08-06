@@ -47,7 +47,7 @@ const Navbar = ({ session }:Navprops)=>{
                     {!session ? (
                             <Link href="/login" className="bg-[#FB953C] w-max sm:pl-4 sm:pr-4  p-1 sm:p-2 rounded-[5px] font-medium text-white hover:bg-[#d6690aff] text-[0.9rem]">Connexion</Link> 
                         ) : (
-                            <Deconnexion /> 
+                            <Deconnexion text="Deconnexion"/> 
                         )}
                     <Image src="/menu.png" alt="menu" width={20} height={20} className="sm:hidden"/>   
                 </div>
