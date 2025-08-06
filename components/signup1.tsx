@@ -3,11 +3,12 @@ import { FcGoogle } from "react-icons/fc";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/auth-client";
+
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"
 import { useState } from "react";
-import { BackButton } from "@/components/back-button"
+import { BackButton } from "@/components/back-button";
+import { signUpEmailAction } from "@/action/sign-up-email.action";
 
 interface Signup1Props {
   heading?: string;
@@ -39,40 +40,22 @@ const Signup1 = ({
   const router = useRouter()
   const [isPending, setisPending]= useState(false)
    async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
-    
     evt.preventDefault();
-   
+
+    setisPending(true);
+
     const formData = new FormData(evt.target as HTMLFormElement);
-    const name = String(formData.get("name"));
-    if (!name) return toast.error("please enter your name");
 
-    const email = String(formData.get("email"));
-    if (!email) return toast.error("please enter your email");
-      
-    const password = String(formData.get("password"));
-    if (!password) return toast.error("please enter your password");
-
-   
+    setisPending(false);
+    const result = await signUpEmailAction(formData);
+    if (typeof result === "object" && result !== null && "error" in result && result.error) {
+      toast.error(result.error);
+      setisPending(false);
+    } else {
+      toast.success("Inscription reussi, veuillez vous connectez");
+      router.push("/login");
+    }
  
-    
-
-    await signUp.email(
-      {
-        name,
-        email,
-        password
-      },
-      {
-        onRequest: () => {setisPending(true)}, 
-        onResponse: () => {setisPending(false)},
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        
-        },
-        onSuccess: () => {toast.success("Sign Up successful, please log in"); router.push("/login")},
-       
-      }
-    );
     
   }
   return (

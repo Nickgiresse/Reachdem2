@@ -23,103 +23,68 @@ interface FAQProps {
 }
 
 export default function FAQ({
-  title = "Questions and Answers",
+  title = "Question Frequemment Poser",
   items = [
     {
       question:
-        "Why building a great landing page is critical for your business?",
+        "Qu'est-ce que ReachDem?",
       answer: (
         <>
           <p className="text-muted-foreground mb-4 max-w-[640px] text-balance">
-            In today&apos;s AI-driven world, standing out is harder than ever.
-            While anyone can build a product, a professional landing page makes
-            the difference between success and failure.
+            
+              ReachDem est une plateforme de messagerie SMS professionnelle qui 
+              vous permet d'envoyer des campagnes SMS à grande échelle,
+              de gérer vos contacts et de suivre vos performances en temps réel.
           </p>
-          <p className="text-muted-foreground mb-4 max-w-[640px] text-balance">
-            Launch UI helps you ship faster without compromising on quality.
-          </p>
+          
         </>
       ),
     },
     {
-      question: "Why use Launch UI instead of a no-code tool?",
+      question: "Comment puis-je demarrer avec ReachDem?",
       answer: (
         <>
           <p className="text-muted-foreground mb-4 max-w-[600px]">
-            No-code tools lock you into their ecosystem with recurring fees and
-            limited control. They often come with performance issues and make it
-            difficult to integrate with your product.
+            Pour commencer, créez simplement un compte sur notre plateforme.
+             Une fois inscrit, vous pourrez créer votre premier projet,
+             ajouter vos contacts et lancer votre première campagne SMS.
           </p>
-          <p className="text-muted-foreground mb-4 max-w-[600px]">
-            You can&apos;t even change your hosting provider and basic things
-            like web analytics come as extra costs and paid add-ons.
-          </p>
-          <p className="text-muted-foreground mb-4 max-w-[600px]">
-            What might seem like a convenient solution today could paint you
-            into a corner tomorrow, limiting your ability to scale and adapt.
-            Launch UI gives you full control of your code while maintaining
-            professional quality.
-          </p>
+         
         </>
       ),
     },
     {
       question:
-        "How Launch UI is different from other components libraries and templates?",
+        "Quels type de campagnes puis-je envoyer?",
       answer: (
         <>
           <p className="text-muted-foreground mb-4 max-w-[580px]">
-            Launch UI stands out with premium design quality and delightful
-            touches of custom animations and illustrations.
+            Vous pouvez envoyer différents types de campagnes SMS : messages promotionnels,
+             notifications, alertes, messages transactionnels, et plus encore. 
+            Notre plateforme prend en charge l'envoi de messages personnalisés à grande échelle.
           </p>
-          <p className="text-muted-foreground mb-4 max-w-[580px]">
-            All components are carefully crafted to help position your product
-            as a professional tool, avoiding the generic template look.
-          </p>
-          <p className="text-muted-foreground mb-4 max-w-[640px] text-balance">
-            Unlike many libraries that rely on outdated CSS practices and old
-            dependencies, Launch UI is built with modern technologies and best
-            practices in mind.
-          </p>
+         
         </>
       ),
     },
     {
-      question: 'Why exactly does it mean that "The code is yours"?',
+      question: 'Comment puis-je import mes contact?',
       answer: (
         <>
           <p className="text-muted-foreground mb-4 max-w-[580px]">
-            The basic version of Launch UI is open-source and free forever,
-            under a do-whatever-you-want license.
+           Vous pouvez importer vos contacts facilement via notre outil d'importation CSV intelligent. Il vous suffit de télécharger 
+           votre fichier CSV contenant les numéros de téléphone et les informations de vos contacts.
           </p>
-          <p className="text-muted-foreground mb-4 max-w-[580px]">
-            The pro version that contains more components and options is a
-            one-time purchase that gives you lifetime access to all current and
-            future content. Use it for unlimited personal and commercial
-            projects - no recurring fees or restrictions.
-          </p>
-          <p className="text-muted-foreground mb-4 max-w-[580px]">
-            For complete details about licensing and usage rights, check out{" "}
-            <Link href="/pricing" className="text-foreground underline">
-              the pricing page
-            </Link>
-            .
-          </p>
+         
         </>
       ),
     },
     {
-      question: "Are Figma files included?",
+      question: "Est-ce que je peux suivre les performances de mes campagnes ?",
       answer: (
         <p className="text-muted-foreground mb-4 max-w-[580px]">
-          Yes! The complete Launch UI template is available for free on the{" "}
-          <Link
-            href="https://www.figma.com/community/file/1420131743903900629/launch-ui-landing-page-components-ui-kit"
-            className="text-foreground underline"
-          >
-            Figma community
-          </Link>
-          .
+         Oui, notre plateforme offre des statistiques détaillées pour chaque campagne, incluant les taux de livraison, les taux d'ouverture, 
+         et d'autres métriques importantes pour optimiser vos performances.
         </p>
       ),
     },
@@ -151,6 +116,32 @@ export default function FAQ({
         <h2 className="text-center text-3xl font-semibold sm:text-5xl">
           {title}
         </h2>
+        <hr className="w-[90%] my-2"/>
+
+        <h3 className="w-[90%]  text-3xl font-semibold sm:text-2xl">
+          Gerneralité
+        </h3>
+        {items !== false && items.length > 0 && (
+          <Accordion type="single" collapsible className="w-full max-w-[800px]">
+            {items.map((item, index) => (
+              <AccordionItem
+                key={index}
+                value={item.value || `item-${index + 1}`}
+              >
+                <AccordionTrigger>{item.question}</AccordionTrigger>
+                <AccordionContent>{item.answer}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
+      </div>
+      
+      <div className="max-w-container mx-auto flex flex-col items-center gap-8">
+        <hr className="w-[90%] my-2"/>
+
+        <h3 className="w-[90%]  text-3xl font-semibold sm:text-2xl">
+          Builder
+        </h3>
         {items !== false && items.length > 0 && (
           <Accordion type="single" collapsible className="w-full max-w-[800px]">
             {items.map((item, index) => (

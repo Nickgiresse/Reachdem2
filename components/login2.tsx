@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import React from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { signIn } from "@/lib/auth-client"
+
 import { useState } from "react";
 import { BackButton } from "@/components/back-button"
+import { signInEmailAction } from "@/action/sign-in-email.action";
 
 
 
@@ -46,33 +47,21 @@ const Login2 = ({
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     
-    evt.preventDefault();
-    const formData = new FormData(evt.target as HTMLFormElement);
-    const email = String(formData.get("email"))
-    if (!email) return toast.error("Please enter your email");
+   evt.preventDefault();
 
-    const password = String(formData.get("password"));
-    if (!password) return toast.error("Please enter your password")
-    
-    console.log({email,password});
-    await signIn.email(
-      {
-        email,
-        password
-      },
-      {
-        onRequest: () => {setisPending(true)}, 
-        onResponse: () => {setisPending(false)},
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        },
-        onSuccess: () =>{
-          toast.success("Login successful");
-          router.push("/")
-          
-        }
-      }
-    )
+    setisPending(true);
+
+    const formData = new FormData(evt.target as HTMLFormElement);
+
+ 
+    const result = await signInEmailAction(formData);
+    if (typeof result === "object" && result !== null && "error" in result && result.error) {
+      toast.error(result.error);
+      setisPending(false);
+    } else {
+      toast.success("Connexion reussi");
+      router.push("/");
+    }
     
   }
   return (
