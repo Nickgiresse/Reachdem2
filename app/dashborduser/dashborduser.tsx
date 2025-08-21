@@ -1,8 +1,8 @@
 "use client"
 
-
+// import { AppSidebar } from "@/components/app-sidebar"
 import { useRouter } from "next/navigation"
-import { Deconnexion } from "@/components/deconnexion"
+// import { Deconnexion } from "@/components/deconnexion"
 
 
 interface HeaderClientProps {
@@ -27,14 +27,17 @@ const DashbordU= ({ session }:HeaderClientProps)=>{
             )
    
     } else {
-            return(
-                <div>
-                    <h1>Bienvenue chez toi boss</h1>
-                     <Deconnexion className="text-black bg-white border-1 border-black px-5  rounded-sm hover:bg-gray-300" text="se deconnecter" />
+          
+                
+            router.push("/dashboard")
+                //    return(
+                //     //  <Deconnexion className="text-black bg-white border-1 border-black px-5  rounded-sm hover:bg-gray-300" text="se deconnecter" /> 
+
+                //    )
                        
 
-                </div>
-            )
+               
+           
 
             
         }
