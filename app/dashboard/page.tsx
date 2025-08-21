@@ -68,6 +68,9 @@ export default function Page() {
             </div>
           </div>
           <h1 className="text-xl md:text-2xl font-bold p-2 ">Statistiques détaillées</h1>
+          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:h-[50vh]" >
+          </div>
+          <h1 className="text-xl md:text-2xl font-bold p-2 ">Statistiques détaillées</h1>
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" >
           </div>
         </div>

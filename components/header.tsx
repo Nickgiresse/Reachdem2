@@ -66,8 +66,8 @@ const Header = ({ session }:HeaderClientProps) => {
                                 >
                                     <span className="text-[#FB953C]">Le lieu</span>
                                     <span className="text-[#FB953C]">Nombre</span>
-                                    <span className="text-[#FB953C]">L'heure</span>
-                                    <span className="text-[#FB953C]">Design Engineers</span>
+                                    <span className="text-[#FB953C]">{"L'heure"}</span>
+                                    
                                 </TextLoop>
                             </div>
  
