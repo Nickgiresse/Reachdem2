@@ -18,7 +18,7 @@ export default async function Home() {
         </div>  
         <hr />
       
-
+ 
         <Footer />
     </div>
     );
