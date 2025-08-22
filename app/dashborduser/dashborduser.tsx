@@ -21,7 +21,7 @@ const DashbordU= ({ session }:HeaderClientProps)=>{
         router.push("/login")
         return(
                 <div className="w-full h-screen flex items-center justify-center">
-                    <h1 className="font-bold text-2xl text-red-500">Error!! Vous n'etes pas autorisé </h1>
+                    <h1 className="font-bold text-2xl text-red-500">{"Error!! Vous n'etes pas autorisé "}</h1>
                    
                 </div>
             )
