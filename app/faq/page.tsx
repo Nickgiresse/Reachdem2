@@ -4,7 +4,7 @@ import Navbar from "@/components/navbar";
 import { useSession } from "@/lib/auth-client";
 
 export default function FAQPage() {
-            const { data, isPending } = useSession();
+            const { data } = useSession();
             // Adapter la session pour la Navbar :
             const user = data?.user
                 ? {
