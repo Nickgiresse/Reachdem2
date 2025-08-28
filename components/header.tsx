@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation"
 import { TextLoop } from '@/components/motion-primitives/text-loop';
 import Navbar from "./navbar"
-
+import { CircleCheckBig, House } from "lucide-react";
 
 interface HeaderClientProps {
     session: {
@@ -27,14 +27,16 @@ const Header = ({ session }:HeaderClientProps) => {
     }
     
     return(
-        <div className="sm:h-screen bg-cover" style={{ backgroundImage: "url('/fontHeader.png')" }}>
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.5 }} className="sm:h-full">
-                <Navbar session={session} />
-                <div className="h-full flex flex-row items-center justify-end md:w-full  pb-12">
-                    <div className="h-max flex flex-col float-right justify-around w-[200px] sm:w-[500px] bg gap-[20px] pr-2 sm:pr-7">
+        <div className="   h-screen bg-[url('/header.jpg')] bg-cover bg-right bg-no-repeat">
+        <div className=" inset-0 md:bg-gradient-to-r bg-gradient-to-t from-black/90 to-black/40 h-full" >
+        
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.5 }} className="z-40 sm:h-full">
+                <Navbar session={session}  />
+                <div className=" h-full flex flex-row  md:w-full ">
+                    <div className="z-20 h-full gap-10 flex flex-col items-center md:items-start pl-0 md:pl-10 w-full md:w-1/2">
                         <div>
-                            <div className=' sm:text-[2rem] text-[1rem] font-bold'>
-                                Atteignez-les peut importes{'   '}
+                            <div className='z-10 text-white md:text-left text-center sm:text-[4rem] text-[3rem] font-bold'>
+                                Atteignez-les, peu importe{'   '}
                                 <TextLoop
                                     className='overflow-y-clip'
                                     transition={{
@@ -70,15 +72,21 @@ const Header = ({ session }:HeaderClientProps) => {
                                     
                                 </TextLoop>
                             </div>
- 
-                            <p className='text-[0.7rem]'>{`Maximisez l'impact de vos communications en touchant tous vos client grace a la grande puissances des SMS`}</p>
+
+                            <p className='text-[0.7rem] sm:text-[1.1rem] text-gray-200 md:text-left text-center'>{`Maximisez l'impact de vos communications en touchant tous vos clients grâce à la grande puissance des SMS`}</p>
                         </div>
-                            <button onClick={clicStart} className="bg-[#FB953C] w-max sm:pl-4 sm:pr-4  p-1 sm:p-2 rounded-[5px] font-medium text-white hover:bg-[#d6690aff] text-[0.7rem] sm:text-[0.9rem]">Commencer maintenant</button> 
-                    
+                            <button onClick={clicStart} className="z-40 bg-[#FB953C] w-max sm:pl-4 sm:pr-4  p-2 rounded-[5px] font-medium text-white hover:bg-[#d6690aff] text-[0.9rem]">Commencer maintenant</button> 
+                            <div className="text-gray-300 flex gap-7">
+                                <p className="flex"><CircleCheckBig color="#FB953C" /><span>30-day free trial.</span></p>
+                                <p className="flex"><CircleCheckBig color="#FB953C" /><span>No credit card required</span></p>
+                            </div>
                     </div>
                 </div>
             </motion.div>
         </div>
+        </div>
+
+   
     )
 } 
 export default Header;

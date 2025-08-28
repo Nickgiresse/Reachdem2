@@ -14,10 +14,10 @@ const Service = () => {
                         <div key={service.id} className="relative rounded-[7px] flex flex-col  gap-5 my-5 sm:my-10 hover:bg-gray-100 p-7 w-full md:w-[350px] ">
                     
                            <div className="p-2">
-                             <Image src={service.image} alt="Logo" width={30} height={30} />
+                                <service.image size={40} color={service.couleur} />
                            </div>
                             <h1 className=" font-bold text-[#263E4F] text-[1.1rem] ">{service.titre}</h1>
-                            <p className="">{service.description}</p>
+                            <p className="font-medium text-gray-500">{service.description}</p>
                         </div>
                     ))
                 }

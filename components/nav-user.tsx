@@ -1,5 +1,6 @@
 "use client"
 
+import { Deconnexion } from "./deconnexion";
 import {
   BadgeCheck,
   Bell,
@@ -104,7 +105,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              Log out
+              <Deconnexion className="bg-transparent text-black w-full h-full" text={"Log out"} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

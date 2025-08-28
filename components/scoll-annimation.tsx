@@ -1,49 +1,45 @@
 "use client";
+import { ReactNode } from "react";
+import { motion, Variants } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
+type ScrollAnimationProps = {
+	children: ReactNode;
+	variants?: Variants;
+	triggerOnce?: boolean;
+	rootMargin?: string;
+	className?: string;
+};
 
-import { useEffect, useRef, type ReactNode } from "react";
+/**
+ * Composant utilitaire pour animer une section à l'entrée dans le viewport.
+ * Utilise Framer Motion + Intersection Observer.
+ *
+ * @param variants - Les variants Framer Motion à appliquer (fade, slide, etc.)
+ * @param triggerOnce - Si true, l'animation ne se joue qu'une fois
+ * @param rootMargin - Pour ajuster le seuil de déclenchement
+ */
+export default function ScrollAnimation({
+	children,
+	variants = {
+		hidden: { opacity: 0, y: 40 },
+		visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+	},
+	triggerOnce = true,
+	rootMargin = "-10% 0px",
+	className = "",
+}: ScrollAnimationProps) {
+	const { ref, inView } = useInView({ triggerOnce, rootMargin });
 
-interface ScrollAnimationProps {
-  children: ReactNode;
-}
-
-export default function ScrollAnimation({ children }: ScrollAnimationProps) {
-  // Using NodeListOf<Element> type for the tags ref
-  const tagsRef = useRef<NodeListOf<Element> | null>(null);
-
-  const handleScroll = () => {
-    const pageTop = window.scrollY;
-    const pageBottom = pageTop + window.innerHeight;
-
-    if (!tagsRef.current) return;
-
-    tagsRef.current.forEach((tag) => {
-      if (!tag) return;
-
-      const tagTop = tag.getBoundingClientRect().top + pageTop;
-      if (tagTop < pageBottom) {
-        tag.classList.add("visible");
-      } else {
-        tag.classList.remove("visible");
-      }
-    });
-  };
-
-  useEffect(() => {
-    // Initialize refs after component mounts
-    tagsRef.current = document.querySelectorAll(".div");
-
-    // Add scroll event listener
-    window.addEventListener("scroll", handleScroll);
-
-    // Run once to check initial positions
-    handleScroll();
-
-    // Clean up event listener
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  return <>{children}</>;
+	return (
+		<motion.div
+			ref={ref}
+			className={className}
+			initial="hidden"
+			animate={inView ? "visible" : "hidden"}
+			variants={variants}
+		>
+			{children}
+		</motion.div>
+	);
 }
