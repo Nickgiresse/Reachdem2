@@ -30,15 +30,16 @@ export function PointerHighlight({
       }
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    const refCopy = containerRef.current;
+    if (refCopy) {
+      resizeObserver.observe(refCopy);
     }
 
     return () => {
-      if (containerRef.current) {
+      if (refCopy) {
         try {
-          resizeObserver.unobserve(containerRef.current);
-        } catch (e) {
+          resizeObserver.unobserve(refCopy);
+        } catch {
           // ignore if already disconnected
         }
       }
