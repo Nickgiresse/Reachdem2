@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation"
 import { TextLoop } from '@/components/motion-primitives/text-loop';
 import Navbar from "./navbar"
-import { CircleCheckBig, House } from "lucide-react";
+import { CircleCheckBig } from "lucide-react";
 
 interface HeaderClientProps {
     session: {

@@ -5,9 +5,9 @@ export function NombreUser() {
     <div className="flex flex-col md:flex-row items-center justify-center gap-9 w-full mb-9">
         <Image src="/end.jpg" alt="Description" width={500} height={500} />
         <div className=" flex flex-col gap-9  text-2xl font-bold tracking-tight md:text-4xl w-full">
-            <p>Nombre d'utilisateur satisfait sur Rechdem</p>
+            <p>{"Nombre d'utilisateur satisfait sur Rechdem"}</p>
             <PointerHighlight>
-                <p className="w-full text-right p-4 rounded-md"><span className="text-9xl text-[#FB953C]">500</span> utilisateurs</p>
+                <p className="w-full text-right p-4 rounded-md"><span className="text-9xl text-[#FB953C]">500</span> Utilisateurs</p>
             </PointerHighlight>
         </div>
     </div>

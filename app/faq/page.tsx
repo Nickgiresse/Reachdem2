@@ -1,5 +1,4 @@
 import FAQ from "@/components/sections/faq/default"
-import { BackButton } from "@/components/back-button"
 import Navbar from "@/components/navbar"
 
 

@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
 export function PointerHighlight({
@@ -36,8 +36,13 @@ export function PointerHighlight({
 
     return () => {
       if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
+        try {
+          resizeObserver.unobserve(containerRef.current);
+        } catch (e) {
+          // ignore if already disconnected
+        }
       }
+      resizeObserver.disconnect();
     };
   }, []);
 
