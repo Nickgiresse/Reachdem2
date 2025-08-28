@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Deconnexion } from "@/components/deconnexion";
-import Image from "next/image"
+
+import { Menu } from "lucide-react";
 const Lien =[
     {   
         id: 1,
@@ -32,12 +33,12 @@ interface Navprops {
 const Navbar = ({ session }:Navprops)=>{
     return(
 <nav className="flex flex-row justify-between p-7 sm:pl-15 items-center ">
-                <Link href="/" className="text-[1.5rem] font-bold ">Reachdem</Link>
-                <div className="flex flex-row justify-around items-center gap-[10px] w-max">
+                <Link href="/" className="text-[1.5rem] font-bold text-white">Reachdem</Link>
+                <div className="text-white flex flex-row justify-around items-center gap-[10px] w-max">
                     {
                         Lien.map((lien)=>{
                             return(
-                                 <Link key={lien.id} href={lien.href} className="hidden sm:inline font-medium hover:font-bold text-[0.9rem] w-max mx-[10px]">{lien.nom}</Link> 
+                                 <Link key={lien.id} href={lien.href} className="hidden sm:inline font-medium hover:text-[#FB953C] text-[0.9rem] w-max mx-[10px]">{lien.nom}</Link> 
                             )
                         })
                     }
@@ -49,7 +50,7 @@ const Navbar = ({ session }:Navprops)=>{
                         ) : (
                             <Deconnexion text="Deconnexion"/> 
                         )}
-                    <Image src="/menu.png" alt="menu" width={20} height={20} className="sm:hidden"/>   
+                   <Menu  color="white" className="sm:hidden"/>
                 </div>
             </nav>
     )

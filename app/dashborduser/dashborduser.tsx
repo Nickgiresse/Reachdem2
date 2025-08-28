@@ -1,9 +1,7 @@
 "use client"
 
-// import { AppSidebar } from "@/components/app-sidebar"
 import { useRouter } from "next/navigation"
-// import { Deconnexion } from "@/components/deconnexion"
-
+import { useEffect, useState } from "react"
 
 interface HeaderClientProps {
     session: {
@@ -15,34 +13,55 @@ interface HeaderClientProps {
     } | null; 
 }
 
-const DashbordU= ({ session }:HeaderClientProps)=>{
+const DashbordU = ({ session }: HeaderClientProps) => {
     const router = useRouter()
-    if (!session) {
-        router.push("/login")
-        return(
-                <div className="w-full h-screen flex items-center justify-center">
-                    <h1 className="font-bold text-2xl text-red-500">{"Error!! Vous n'etes pas autorisé "}</h1>
-                   
-                </div>
-            )
-   
-    } else {
-          
-                
-            router.push("/dashboard")
-                //    return(
-                //     //  <Deconnexion className="text-black bg-white border-1 border-black px-5  rounded-sm hover:bg-gray-300" text="se deconnecter" /> 
-
-                //    )
-                       
-
-               
-           
-
-            
-        }
+    const [isRedirecting, setIsRedirecting] = useState(false)
     
-      
-   
-} 
+    useEffect(() => {
+        setIsRedirecting(true)
+        
+        const redirectTimer = setTimeout(() => {
+            if (!session) {
+                router.push("/login")
+            } else {
+                router.push("/dashboard")
+            }
+        }, 1000) // Délai d'1 seconde pour montrer le message
+        
+        return () => clearTimeout(redirectTimer)
+    }, [session, router])
+
+    if (!session) {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="font-bold text-2xl text-red-500 mb-4">
+                        {"Erreur!! Vous n'êtes pas autorisé"}
+                    </h1>
+                    {isRedirecting && (
+                        <p className="text-gray-600">
+                            Redirection vers la page de connexion...
+                        </p>
+                    )}
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="w-full h-screen flex items-center justify-center">
+            <div className="text-center">
+                <h1 className="font-bold text-2xl text-blue-500 mb-4">
+                    Bienvenue {session.user?.name || session.user?.email}
+                </h1>
+                {isRedirecting && (
+                    <p className="text-gray-600">
+                        Redirection vers le dashboard...
+                    </p>
+                )}
+            </div>
+        </div>
+    )
+}
+
 export default DashbordU;
