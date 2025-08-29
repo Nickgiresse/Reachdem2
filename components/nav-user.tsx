@@ -1,6 +1,10 @@
 "use client"
 
-import { Deconnexion } from "./deconnexion";
+import { useRouter } from "next/navigation";
+import { signOut } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useState } from "react";
+
 import {
   BadgeCheck,
   Bell,
@@ -41,6 +45,25 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+  const [isPending, setisPending]= useState(false)
+  
+  async function handleClick() {
+      await signOut(
+          {
+              fetchOptions: {
+                   onRequest: () => {setisPending(true)}, 
+                  onResponse: () => {setisPending(false)},
+                  onError:(ctx)=>{
+                      toast.error(ctx.error.message)
+                  },
+                  onSuccess: () => {
+                      router.push("/")
+                  }
+              }
+          }
+      )
+  }
 
   return (
     <SidebarMenu>
@@ -103,9 +126,9 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleClick} variant="destructive" disabled={isPending}>
               <LogOut />
-              <Deconnexion className="bg-transparent text-black w-full h-full" text={"Log out"} />
+              {"Log out"} 
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
