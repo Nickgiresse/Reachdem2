@@ -65,8 +65,8 @@ const Login2 = ({
     
   }
   return (
-    <section className="bg-muted h-screen p-2">
-      <BackButton href="/" label="Home" />
+    <section className="bg-gradient-to-b from-white to-[#fde1cb8b]  h-screen p-2">
+      <BackButton href="/"  />
         
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-6 lg:justify-start">
