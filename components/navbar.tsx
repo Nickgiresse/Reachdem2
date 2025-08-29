@@ -3,6 +3,7 @@ import { Deconnexion } from "@/components/deconnexion";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
+import { useScroll } from "@/hooks/use-scroll";
 
 const Lien =[
     {   
@@ -38,14 +39,29 @@ interface Navprops {
 
 const Navbar = ({ session }:Navprops)=>{
     const [toggleMenu, setToggleMenu] = useState(false);
+    const isScrolled = useScroll();
+    
     return(
-<nav className="flex flex-row justify-between p-7 sm:pl-15 items-center ">
-                <Link href="/" className="text-[1.5rem] font-bold text-white">Reachdem</Link>
-                <div className="text-white flex flex-row justify-around items-center gap-[10px] w-max z-1">
+        <nav className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${
+            isScrolled 
+                ? ' w-[80%] backdrop-blur-md rounded-full border border-gray-200 shadow-lg py-4 top-10' 
+                : 'w-full bg-transparent py-7 '
+        }`}>
+            <div className="flex flex-row justify-between px-7 sm:pl-15 items-center">
+                <Link href="/" className={`text-[1.5rem] font-bold transition-colors duration-300 ${
+                    isScrolled ? 'text-black' : 'text-white'
+                }`}>
+                    Reachdem
+                </Link>
+                <div className={`flex flex-row justify-around items-center gap-[10px] w-max z-1 ${
+                    isScrolled ? 'text-black' : 'text-white'
+                }`}>
                     {
                         Lien.map((lien)=>{
                             return(
-                                 <Link key={lien.id} href={lien.href} className="hidden sm:inline font-medium hover:text-[#FB953C] text-[0.9rem] w-max mx-[10px]">{lien.nom}</Link> 
+                                 <Link key={lien.id} href={lien.href} className={`hidden sm:inline font-medium hover:text-[#FB953C] text-[0.9rem] w-max mx-[10px] transition-colors duration-300 ${
+                                     isScrolled ? 'text-black hover:text-[#FB953C]' : 'text-white hover:text-[#FB953C]'
+                                 }`}>{lien.nom}</Link> 
                             )
                         })
                     }
@@ -64,14 +80,19 @@ const Navbar = ({ session }:Navprops)=>{
                 {
                     toggleMenu 
                     ? <AiOutlineClose fontSize={28} className='text-black md:hidden cursor-pointer' onClick={() => setToggleMenu(false)} />
-                    : <HiMenuAlt4 fontSize={28} className='text-white rounded-sm p-2 border-1 border-[#FB953C] bg-transparent hover:bg-[#FB953C] md:hidden cursor-pointer' onClick={() => setToggleMenu(true)} />}
+                    : <HiMenuAlt4 fontSize={28} className={`rounded-sm p-2 border-1 border-[#FB953C] bg-transparent hover:bg-[#FB953C] md:hidden cursor-pointer transition-colors duration-300 ${
+                        isScrolled ? 'text-black' : 'text-white'
+                    }`} onClick={() => setToggleMenu(true)} />}
                 {
                    toggleMenu && (
                     <ul
-                        className='z-40 fixed top-0 -right-2 p-3 w-[80vw] h-screen shadow-2xl md:hidden list-none
-                            flex flex-col justify-start items-center rounded-md bg-gradient-to-b from-white to-[#ead3c0]  text-black animate-slide-in 
-                            gap-3
-                        '
+                        className={`
+                            ${
+                            isScrolled 
+                                ? ' z-40 fixed top-0 -right-2 p-3 w-[80vw] h-[30vh] shadow-2xl md:hidden list-none flex flex-col justify-start items-center rounded-md bg-gradient-to-b from-white to-[#ead3c0]  text-black animate-slide-in gap-3' 
+                                : 'z-40 fixed top-0 -right-2 p-3 w-[80vw] h-screen shadow-2xl md:hidden list-none flex flex-col justify-start items-center rounded-md bg-gradient-to-b from-white to-[#ead3c0]  text-black animate-slide-in gap-3'
+                        }
+                        `}
                     >
                         <li className='text-xl w-full my-2'>
                             <AiOutlineClose className='cursor-pointer' onClick={() => setToggleMenu(false)} />
@@ -100,8 +121,8 @@ const Navbar = ({ session }:Navprops)=>{
                    ) 
                 }    
             </div>
-
-    </nav>
+            </div>
+        </nav>
     )
 }
 export default Navbar
