@@ -60,7 +60,7 @@ const Prix=[
 const GridPrix= () => {
     return(
         <div className=" flex flex-col justify-center items-center relative gap-[1%] mt-[50px] mb-[5%]">
-            <h1 className="sm:text-[2rem] text-2xl font-bold ">Nous offrons des prix <span className="text-[#FB953C]">Abordable</span></h1>
+            <h1 className="sm:text-[2rem] text-2xl font-bold text-center">Nous offrons des prix <span className="text-[#FB953C]">Abordable</span></h1>
             <p className="sm:text-[1.2rem] text-[0.8rem] text-center">Consultez nos plans tarifaires pour trouver le meilleur choix pour vous</p>
             <div className="flex md:flex-row flex-col justify-center gap-10 mx-9 my-10">
                 {

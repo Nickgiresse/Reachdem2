@@ -33,9 +33,9 @@ const Header = ({ session }:HeaderClientProps) => {
             <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.5 }} className="z-40 sm:h-full">
                 <Navbar session={session}  />
                 <div className=" h-full flex flex-row  md:w-full ">
-                    <div className="z-20 h-full gap-10 flex flex-col items-center md:items-start pl-0 md:pl-10 w-full md:w-1/2">
+                    <div className="z-20 h-full  gap-10 flex flex-col items-center md:items-start pl-0 md:pl-10 w-full md:w-1/2">
                         <div>
-                            <div className='z-10 text-white md:text-left text-center sm:text-[4rem] text-[3rem] font-bold'>
+                            <div className='z-10 pt-20 md:pt-40 text-white md:text-left text-center sm:text-[4rem] text-[3rem] font-bold'>
                                 Atteignez-les, peu importe{'   '}
                                 <TextLoop
                                     className='overflow-y-clip'
@@ -77,8 +77,8 @@ const Header = ({ session }:HeaderClientProps) => {
                         </div>
                             <button onClick={clicStart} className="z-40 bg-[#FB953C] w-max sm:pl-4 sm:pr-4  p-2 rounded-[5px] font-medium text-white hover:bg-[#d6690aff] text-[0.9rem]">Commencer maintenant</button> 
                             <div className="text-gray-300 flex gap-7">
-                                <p className="flex"><CircleCheckBig color="#FB953C" /><span>30-day free trial.</span></p>
-                                <p className="flex"><CircleCheckBig color="#FB953C" /><span>No credit card required</span></p>
+                                <p className="flex items-center gap-2"><CircleCheckBig color="#FB953C" className="w-4 h-4"/><span className="text-sm">{"30-jours d'essai gratuit."}</span></p>
+                                <p className="flex items-center gap-2"><CircleCheckBig color="#FB953C" className="w-4 h-4"/><span className="text-sm">{"Pas de carte de credit requis"}</span></p>
                             </div>
                     </div>
                 </div>

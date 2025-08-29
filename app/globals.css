@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Ajout d'un padding-top pour compenser la navbar fixe */
+body {
+  padding-top: 0px;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
