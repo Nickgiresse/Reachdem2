@@ -4,7 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 // If your Prisma file is located elsewhere, you can change the path
 // import { PrismaClient } from "@prisma/client"; // Adjust the import path as necessary
 import { prisma } from "@/lib/prisma";
-import { hashPassword, verifyPassword } from "@/lib/argon2";
+import { hashPassword, verifyPassword } from "@/lib/argon2-server";
 
 
  

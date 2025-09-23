@@ -1,6 +1,7 @@
 "use client"
 
-import {  type LucideIcon } from "lucide-react"
+import { Boxes, House, Settings, User } from "lucide-react"
+import Link from "next/link"
 
 import {
   Collapsible,
@@ -15,13 +16,20 @@ import {
 
 } from "@/components/ui/sidebar"
 
+const ICONS = {
+  House,
+  User,
+  Boxes,
+  Settings,
+} as const
+
 export function NavMain({
   items,
 }: {
   items: {
     title: string
     url: string
-    icon?: LucideIcon
+    icon?: keyof typeof ICONS
     isActive?: boolean
     items?: {
       title: string
@@ -42,13 +50,13 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                 
+                <SidebarMenuButton asChild tooltip={item.title}>
+                <Link href={item.url} className="hover:bg-[#FB953C] hover:text-black">
+                {item.icon && (() => { const Icon = ICONS[item.icon!]; return <Icon /> })()}
+                    <span>{item.title}</span>
+                  </Link>
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-             
             </SidebarMenuItem>
           </Collapsible>
         ))}

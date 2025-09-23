@@ -13,12 +13,12 @@ const Lien =[
     },{   
         id: 2,
         nom:"A propos",
-        href: "/"
+        href: "/apropos"
     },
     {   
         id: 3,
         nom:"Contact",
-        href: "/"
+        href: "/contact"
     },
     {   
         id: 4,

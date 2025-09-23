@@ -32,7 +32,7 @@ const Header = ({ session }:HeaderClientProps) => {
         
             <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.5 }} className="z-40 sm:h-full">
                 <Navbar session={session}  />
-                <div className=" h-full flex flex-row  md:w-full ">
+                <div className=" h-full flex flex-row items-center  md:w-full ">
                     <div className="z-20 h-full  gap-10 flex flex-col items-center md:items-start pl-0 md:pl-10 w-full md:w-1/2">
                         <div>
                             <div className='z-10 pt-20 md:pt-40 text-white md:text-left text-center sm:text-[4rem] text-[3rem] font-bold'>
@@ -67,7 +67,7 @@ const Header = ({ session }:HeaderClientProps) => {
                                     }}
                                 >
                                     <span className="text-[#FB953C]">Le lieu</span>
-                                    <span className="text-[#FB953C]">Nombre</span>
+                                    <span className="text-[#FB953C]">Le Nombre</span>
                                     <span className="text-[#FB953C]">{"L'heure"}</span>
                                     
                                 </TextLoop>
