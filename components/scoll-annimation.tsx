@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -29,7 +29,17 @@ export default function ScrollAnimation({
 	rootMargin = "-10% 0px",
 	className = "",
 }: ScrollAnimationProps) {
+	const [isMounted, setIsMounted] = useState(false);
 	const { ref, inView } = useInView({ triggerOnce, rootMargin });
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
+	// Pendant l'hydratation, afficher le contenu sans animation
+	if (!isMounted) {
+		return <div className={className}>{children}</div>;
+	}
 
 	return (
 		<motion.div

@@ -93,7 +93,6 @@ model UserProfile {
 model Project {
   project_id  String      @id @default(cuid())
   sender_name String
-  sms_credit  Int         @default(0)
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
   user_id     String
@@ -123,6 +122,8 @@ model Contact {
   first_name   String
   last_name    String
   phone        String
+  email        String?
+  address      String?
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
   phonebook    Phonebook      @relation(fields: [phonebook_id], references: [phonebook_id], onDelete: Cascade)

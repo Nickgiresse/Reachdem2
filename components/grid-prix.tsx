@@ -1,5 +1,3 @@
-
-
 const Prix=[
     {
         id:1,

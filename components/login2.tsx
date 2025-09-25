@@ -44,6 +44,17 @@ const Login2 = ({
 }: Login2Props) => {
   const router = useRouter()
   const [isPending, setisPending]= useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  // Fonction pour gérer les changements dans les champs
+  const handleInputChange = (field: 'email' | 'password', value: string) => {
+    if (field === 'email') {
+      setEmail(value);
+    } else {
+      setPassword(value);
+    }
+  };
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     
@@ -91,7 +102,8 @@ const Login2 = ({
                   name="email"
                   placeholder="Email"
                   className="text-sm"
-                 
+                  value={email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
                 />
               </div>
               <div className="flex w-full flex-col gap-2">
@@ -101,7 +113,8 @@ const Login2 = ({
                   name="password"
                   placeholder="Password"
                   className="text-sm"
-                 
+                  value={password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
                 />
               </div>
               <Button type="submit" className="w-full bg-[#FB953C] hover:bg-[#d6690aff]" disabled={isPending}>
@@ -122,14 +135,16 @@ const Login2 = ({
                 </Button>
             
           </form>
-          <div className="text-muted-foreground flex justify-center gap-1 text-sm">
-            <p>{signupText}</p>
-            <a
-              href={signupUrl}
-              className="text-primary font-medium hover:underline"
-            >
-              Sign up
-            </a>
+          <div className="text-muted-foreground flex flex-col items-center gap-2 text-sm">
+            <div className="flex gap-1">
+              <p>{signupText}</p>
+              <a
+                href={signupUrl}
+                className="text-primary font-medium hover:underline"
+              >
+                Sign up
+              </a>
+            </div>
           </div>
         </div>
       </div>

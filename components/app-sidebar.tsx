@@ -1,17 +1,10 @@
-"use client"
-
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
+
   Frame,
-  GalleryVerticalEnd,
-  Map,
+
   PieChart,
-  Settings2,
-  SquareTerminal,
+
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -26,96 +19,115 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
-const data = {
-  user: {
-    name: "Nick giresse",
-    email: "kamdemnick12@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Reachdem",
-      logo: GalleryVerticalEnd,
-      plan: "Dashboard",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Accueil",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      
-      
-    },
-    {
-      title: "Contacts",
-      url: "#",
-      icon: Bot,
-     
-    },
-    {
-      title: "Groupes",
-      url: "#",
-      icon: BookOpen,
-     
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-     
-    },
-  ],
-  projects: [
-    {
-      name: "Projets",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Campagnes",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Historiques",
-      url: "#",
-      icon: Map,
-    },
-    {
-      name: "Facturation",
-      url: "#",
-      icon: Map,
-    },
-  ],
-  plateform: [
-    {
-      name: "Aide",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "A propos",
-      url: "#",
-      icon: PieChart,
-    },
-   
-  ],
-}
+import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  type NavMainItem = {
+    title: string
+    url: string
+    icon?: "House" | "User" | "Boxes" | "Settings"
+    isActive?: boolean
+    items?: { title: string; url: string }[]
+  }
+
+  type ProjectItem = {
+    name: string
+    url: string
+    icon: "Frame" | "PieChart" | "Map"
+  }
+
+  const data: {
+    user: { name: string; email: string; avatar: string }
+    teams: { name: string; logo: "MessageSquareDot" | "House" | "Command"; plan: string }[]
+    navMain: NavMainItem[]
+    projects: ProjectItem[]
+    plateform: { name: string; url: string; icon: object }[]
+  } = {
+    user: {
+      name: session?.user?.name ?? session?.user?.email ?? "Utilisateur",
+      email: session?.user?.email ?? "inconnu@example.com",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    teams: [
+      {
+        name: "Reachdem",
+        logo: "MessageSquareDot",
+        plan: "Dashboard",
+      },
+      {
+        name: "Acme Corp.",
+        logo: "House",
+        plan: "Startup",
+      },
+      {
+        name: "Evil Corp.",
+        logo: "Command",
+        plan: "Free",
+      },
+    ],
+    navMain: [
+      {
+        title: "Accueil",
+        url: "/dashboard",
+        icon: "House",
+        isActive: true,
+      },
+      {
+        title: "Contacts",
+        url: "/dashboard/contact",
+        icon: "User",
+      },
+      {
+        title: "Groupes",
+        url: "/dashboard/groupe",
+        icon: "Boxes",
+      },
+      {
+        title: "Settings",
+        url: "/dashboard/setting",
+        icon: "Settings",
+      },
+    ],
+    projects: [
+      {
+        name: "Projets",
+        url: "/dashboard/projet",
+        icon: "Frame",
+      },
+      {
+        name: "Campagnes",
+        url: "/dashboard/campagne",
+        icon: "PieChart",
+      },
+      {
+        name: "Historiques",
+        url: "/dashboard/historique",
+        icon: "Map",
+      },
+      {
+        name: "Facturation",
+        url: "/dashboard/facturation",
+        icon: "Map",
+      },
+    ],
+    plateform: [
+      {
+        name: "Aide",
+        url: "/dashboard/aide",
+        icon: Frame,
+      },
+      {
+        name: "A propos",
+        url: "/dashboard/a-propos",
+        icon: PieChart,
+      },
+    ],
+  }
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
