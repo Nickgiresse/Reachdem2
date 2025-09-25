@@ -12,7 +12,7 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -45,7 +45,7 @@ export default function ContactDetail({ params }: { params: { id: string } }) {
   const notification = useNotification();
 
   // Charger les détails du contact
-  const fetchContact = async () => {
+  const fetchContact = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/contacts/${params.id}`);
@@ -77,11 +77,11 @@ export default function ContactDetail({ params }: { params: { id: string } }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.id, toast, router]);
 
   useEffect(() => {
     fetchContact();
-  }, [params.id]);
+  }, [fetchContact]);
 
   // Supprimer le contact
   const handleDeleteContact = async () => {

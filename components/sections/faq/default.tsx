@@ -127,7 +127,7 @@ const builderItems: FAQItemProps[] = [
 ];
 
 export default function FAQ({
-  title = "Questions Fréquemment Posées",
+  title: _title = "Questions Fréquemment Posées",
   className,
 }: FAQProps) {
   const sectionVariants = {
@@ -135,7 +135,7 @@ export default function FAQ({
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.6 }
     }
   };
 
@@ -144,7 +144,7 @@ export default function FAQ({
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
+      transition: { duration: 0.5 }
     }
   };
 

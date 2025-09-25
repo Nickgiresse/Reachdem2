@@ -14,7 +14,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -56,7 +56,7 @@ export default function CampaignDetail({ params }: { params: { id: string } }) {
   const notification = useNotification();
 
   // Charger les détails de la campagne
-  const fetchCampaign = async () => {
+  const fetchCampaign = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/campaigns/${params.id}`);
@@ -88,11 +88,11 @@ export default function CampaignDetail({ params }: { params: { id: string } }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.id, toast, router]);
 
   useEffect(() => {
     fetchCampaign();
-  }, [params.id]);
+  }, [fetchCampaign]);
 
   // Supprimer la campagne
   const handleDeleteCampaign = async () => {
