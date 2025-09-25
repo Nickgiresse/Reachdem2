@@ -159,7 +159,7 @@ export default function Projet() {
         title: "Succès",
         description: "Message copié dans le presse-papiers !",
       });
-    } catch (_error) {
+    } catch (_) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -186,7 +186,7 @@ export default function Projet() {
         title: "Succès",
         description: "QR code téléchargé avec succès !",
       });
-    } catch (_error) {
+    } catch (_) {
       toast({
         variant: "destructive",
         title: "Erreur",
