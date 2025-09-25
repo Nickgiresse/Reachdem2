@@ -126,6 +126,7 @@ const builderItems: FAQItemProps[] = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function FAQ({
   title: _ = "Questions Fréquemment Posées",
   className,
