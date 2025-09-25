@@ -127,7 +127,7 @@ const builderItems: FAQItemProps[] = [
 ];
 
 export default function FAQ({
-  title: _title = "Questions Fréquemment Posées",
+  title: _ = "Questions Fréquemment Posées",
   className,
 }: FAQProps) {
   const sectionVariants = {
