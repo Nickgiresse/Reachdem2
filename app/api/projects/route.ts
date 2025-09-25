@@ -3,7 +3,7 @@ import { PrismaClient } from '@/generated/prisma';
 
 const prisma = new PrismaClient();
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Pour l'instant, on récupère tous les projets
     // Dans une vraie application, vous devriez filtrer par utilisateur connecté

@@ -3,7 +3,7 @@ import { PrismaClient } from '@/generated/prisma';
 
 const prisma = new PrismaClient();
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const campaigns = await prisma.campaign.findMany({
       include: {
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, project_id, group_ids, message, channel } = body;
+    const { name, project_id, group_ids, message } = body;
 
     // Validation des données
     if (!name || !project_id || !group_ids || !Array.isArray(group_ids) || group_ids.length === 0 || !message) {

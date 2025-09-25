@@ -56,7 +56,7 @@ export default function ContactDetail({ params }: { params: { id: string } }) {
         toast({
           variant: "destructive",
           title: "Contact non trouvé",
-          description: "Le contact demandé n'existe pas.",
+          description: "Le contact demandé n&apos;existe pas.",
         });
         router.push("/dashboard/contact");
       } else {
@@ -174,7 +174,7 @@ export default function ContactDetail({ params }: { params: { id: string } }) {
         </div>
         <Card className="p-6 text-center">
           <User className="w-12 h-12 mx-auto mb-4 text-zinc-400" />
-          <p className="text-zinc-500">Le contact demandé n'existe pas.</p>
+          <p className="text-zinc-500">Le contact demandé n&apos;existe pas.</p>
         </Card>
       </div>
     );
@@ -211,10 +211,10 @@ export default function ContactDetail({ params }: { params: { id: string } }) {
             variant="outline"
             className="flex items-center gap-2"
             onClick={() => {
-              // TODO: Implémenter l'édition du contact
+              // TODO: Implémenter l&apos;édition du contact
               toast({
                 title: "Fonctionnalité à venir",
-                description: "L'édition des contacts sera bientôt disponible.",
+                description: "L&apos;édition des contacts sera bientôt disponible.",
               });
             }}
           >
@@ -292,9 +292,9 @@ export default function ContactDetail({ params }: { params: { id: string } }) {
           {contact.groups.length === 0 ? (
             <div className="text-center py-8">
               <Users className="w-12 h-12 mx-auto mb-4 text-zinc-300" />
-              <p className="text-zinc-500">Ce contact n'appartient à aucun groupe</p>
+              <p className="text-zinc-500">Ce contact n&apos;appartient à aucun groupe</p>
               <p className="text-sm text-zinc-400 mt-1">
-                Vous pouvez l'ajouter à un groupe depuis la page des contacts
+                Vous pouvez l&apos;ajouter à un groupe depuis la page des contacts
               </p>
             </div>
           ) : (

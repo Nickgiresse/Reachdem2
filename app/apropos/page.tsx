@@ -178,17 +178,17 @@ export default function AproposPage() {
                 Notre Mission
               </h2>
               <p className="text-lg text-gray-600 mb-6">
-                Chez ReachDem, nous croyons que chaque entreprise mérite d'avoir accès 
-                à des outils de communication professionnels et fiables. Notre mission 
-                est de démocratiser l'accès aux solutions de messagerie SMS de qualité 
-                pour permettre à toutes les entreprises, quelle que soit leur taille, 
-                d'atteindre efficacement leurs clients.
+                {"Chez ReachDem, nous croyons que chaque entreprise mérite d'avoir accès "}
+                {"à des outils de communication professionnels et fiables. Notre mission "}
+                {"est de démocratiser l'accès aux solutions de messagerie SMS de qualité "}
+                {"pour permettre à toutes les entreprises, quelle que soit leur taille, "}
+                {"d'atteindre efficacement leurs clients."}
               </p>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-orange-500 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Simplicité d'utilisation</h3>
+                    <h3 className="font-semibold text-gray-900">{"Simplicité d'utilisation"}</h3>
                     <p className="text-gray-600">Interface intuitive pour une prise en main rapide</p>
                   </div>
                 </div>
@@ -202,8 +202,8 @@ export default function AproposPage() {
                 <div className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-orange-500 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Support dédié</h3>
-                    <p className="text-gray-600">Équipe d'experts disponible 24h/24</p>
+                    <h3 className="font-semibold text-gray-900">{"Support dédié"}</h3>
+                    <p className="text-gray-600">{"Équipe d'experts disponible 24h/24"}</p>
                   </div>
                 </div>
               </div>
@@ -219,9 +219,9 @@ export default function AproposPage() {
                 <TrendingUp className="w-12 h-12 mb-6" />
                 <h3 className="text-2xl font-bold mb-4">Notre Vision</h3>
                 <p className="text-lg">
-                  Devenir la référence mondiale en matière de solutions de communication 
-                  digitale, en offrant des outils innovants qui transforment la relation 
-                  entre les entreprises et leurs clients.
+                  {"Devenir la référence mondiale en matière de solutions de communication "}
+                  {"digitale, en offrant des outils innovants qui transforment la relation "}
+                  {"entre les entreprises et leurs clients."}
                 </p>
               </div>
             </motion.div>
@@ -249,8 +249,8 @@ export default function AproposPage() {
               Nos Valeurs
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Ces valeurs fondamentales guident chacune de nos décisions et actions 
-              au quotidien pour vous offrir le meilleur service possible.
+              {"Ces valeurs fondamentales guident chacune de nos décisions et actions "}
+              {"au quotidien pour vous offrir le meilleur service possible."}
             </p>
           </motion.div>
           
@@ -296,8 +296,8 @@ export default function AproposPage() {
               Pourquoi Choisir ReachDem ?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Découvrez les avantages qui font de ReachDem le choix privilégié 
-              de milliers d'entreprises à travers le monde.
+              {"Découvrez les avantages qui font de ReachDem le choix privilégié "}
+              {"de milliers d'entreprises à travers le monde."}
             </p>
           </motion.div>
           
@@ -344,8 +344,8 @@ export default function AproposPage() {
               Notre Équipe
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Une équipe passionnée et expérimentée qui travaille sans relâche 
-              pour vous offrir la meilleure expérience possible.
+              {"Une équipe passionnée et expérimentée qui travaille sans relâche "}
+              {"pour vous offrir la meilleure expérience possible."}
             </p>
           </motion.div>
           
@@ -391,8 +391,7 @@ export default function AproposPage() {
               Prêt à Transformer Votre Communication ?
             </h2>
             <p className="text-xl text-white/90 mb-8">
-              Rejoignez des milliers d'entreprises qui font confiance à ReachDem 
-              pour leurs besoins de communication digitale.
+              {"Rejoignez des milliers d'entreprises qui font confiance à ReachDem pour leurs besoins de communication digitale."}
             </p>
             <motion.button
               className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-300"

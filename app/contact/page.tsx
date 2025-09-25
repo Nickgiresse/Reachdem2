@@ -162,7 +162,7 @@ export default function ContactPage() {
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
               Notre équipe est là pour vous accompagner dans votre projet de communication. 
-              N'hésitez pas à nous contacter pour toute question.
+              {"N'hésitez pas à nous contacter pour toute question."}
             </p>
           </motion.div>
         </div>
@@ -364,7 +364,7 @@ export default function ContactPage() {
 
             {/* Quick Contact */}
             <div className="bg-gradient-to-r from-orange-500 to-orange-400 rounded-2xl p-8 text-white">
-              <h3 className="text-xl font-bold mb-4">Besoin d'aide immédiate ?</h3>
+              <h3 className="text-xl font-bold mb-4">Besoin d&apos;aide immédiate ?</h3>
               <p className="mb-6">Notre équipe support est disponible 24h/24 pour vous accompagner.</p>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
