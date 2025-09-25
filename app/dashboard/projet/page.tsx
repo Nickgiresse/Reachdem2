@@ -9,6 +9,7 @@ import {
   Download,
   QrCode,
 } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,7 @@ import {
   DialogTrigger,
 
 } from "@/components/motion-primitives/dialog";
-import { Variants, Transition } from "motion/react";
+
 import { useToast } from "@/hooks/use-toast";
 import { useNotification } from "@/hooks/use-notification";
 import { NotificationDialog } from "@/components/ui/notification-dialog";
@@ -28,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProjectCardSkeleton } from "@/components/ui/table-skeleton";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+
 
 interface Project {
   project_id: string;
@@ -158,7 +159,7 @@ export default function Projet() {
         title: "Succès",
         description: "Message copié dans le presse-papiers !",
       });
-    } catch (error) {
+    } catch (_error) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -185,7 +186,7 @@ export default function Projet() {
         title: "Succès",
         description: "QR code téléchargé avec succès !",
       });
-    } catch (error) {
+    } catch (_error) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -368,9 +369,11 @@ export default function Projet() {
             {/* QR Code */}
             <div className="flex justify-center">
               <div className="p-4 bg-white border border-zinc-200 rounded-lg">
-                <img 
+                <Image 
                   src={qrCodeUrl} 
                   alt="QR Code WhatsApp" 
+                  width={192}
+                  height={192}
                   className="w-48 h-48"
                 />
               </div>
@@ -482,7 +485,7 @@ export default function Projet() {
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium text-zinc-700">Durée d'existence</Label>
+                    <Label className="text-sm font-medium text-zinc-700">{"Durée d'existence"}</Label>
                     <p className="mt-1 text-zinc-900">
                       {Math.floor((Date.now() - new Date(detailProject.created_at).getTime()) / (1000 * 60 * 60 * 24))} jours
                     </p>
@@ -506,7 +509,7 @@ export default function Projet() {
                     }}
                   >
                     <Copy className="w-4 h-4 mr-2" />
-                    Copier l'ID
+                    {"Copier l'ID"}
                   </Button>
                   
                   <Button

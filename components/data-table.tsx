@@ -56,31 +56,31 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
-  const selectionColumn: ColumnDef<TData, TValue> | null = selectable
-    ? {
-        id: "select",
-        header: ({ table }: { table: TanStackTable<TData> }) => (
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-            onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Sélectionner tout"
-          />
-        ),
-        cell: ({ row }: { row: Row<TData> }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
-            aria-label="Sélectionner la ligne"
-          />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-      }
-    : null
-
   const finalColumns = React.useMemo(() => {
+    const selectionColumn: ColumnDef<TData, TValue> | null = selectable
+      ? {
+          id: "select",
+          header: ({ table }: { table: TanStackTable<TData> }) => (
+            <Checkbox
+              checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+              onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(!!value)}
+              aria-label="Sélectionner tout"
+            />
+          ),
+          cell: ({ row }: { row: Row<TData> }) => (
+            <Checkbox
+              checked={row.getIsSelected()}
+              onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
+              aria-label="Sélectionner la ligne"
+            />
+          ),
+          enableSorting: false,
+          enableHiding: false,
+        }
+      : null
+
     return selectionColumn ? ([selectionColumn, ...columns] as ColumnDef<TData, TValue>[]) : (columns as ColumnDef<TData, TValue>[])
-  }, [columns, selectionColumn])
+  }, [columns, selectable])
 
   const table = useReactTable({
     data,

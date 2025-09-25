@@ -39,9 +39,9 @@ interface PreventScrollOptions {
   focusCallback?: () => void;
 }
 
-function chain(...callbacks: any[]): (...args: any[]) => void {
-  return (...args: any[]) => {
-    for (let callback of callbacks) {
+function chain(...callbacks: ((...args: unknown[]) => void)[]): (...args: unknown[]) => void {
+  return (...args: unknown[]) => {
+    for (const callback of callbacks) {
       if (typeof callback === 'function') {
         callback(...args);
       }
@@ -297,13 +297,13 @@ function setStyle(
   value: string
 ) {
   // https://github.com/microsoft/TypeScript/issues/17827#issuecomment-391663310
-  // @ts-expect-error
+  // @ts-expect-error TypeScript issue with dynamic style property access
   const cur = element.style[style];
-  // @ts-expect-error
+  // @ts-expect-error TypeScript issue with dynamic style property assignment
   element.style[style] = value;
 
   return () => {
-    // @ts-expect-error
+    // @ts-expect-error TypeScript issue with dynamic style property restoration
     element.style[style] = cur;
   };
 }
@@ -312,14 +312,14 @@ function setStyle(
 function addEvent<K extends keyof GlobalEventHandlersEventMap>(
   target: EventTarget,
   event: K,
-  handler: (this: Document, ev: GlobalEventHandlersEventMap[K]) => any,
+  handler: (this: Document, ev: GlobalEventHandlersEventMap[K]) => void,
   options?: boolean | AddEventListenerOptions
 ) {
-  // @ts-expect-error
+  // @ts-expect-error EventTarget type compatibility issue
   target.addEventListener(event, handler, options);
 
   return () => {
-    // @ts-expect-error
+    // @ts-expect-error EventTarget type compatibility issue
     target.removeEventListener(event, handler, options);
   };
 }
@@ -346,7 +346,7 @@ function scrollIntoView(target: Element) {
       }
     }
 
-    // @ts-expect-error
+    // @ts-expect-error Element type narrowing for parent traversal
     target = scrollable.parentElement;
   }
 }

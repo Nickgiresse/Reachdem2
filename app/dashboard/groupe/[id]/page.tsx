@@ -14,7 +14,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -50,7 +50,7 @@ export default function GroupDetail({ params }: { params: { id: string } }) {
   const notification = useNotification();
 
   // Charger les détails du groupe
-  const fetchGroup = async () => {
+  const fetchGroup = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/groups/${params.id}`);
@@ -82,11 +82,11 @@ export default function GroupDetail({ params }: { params: { id: string } }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.id, toast, router]);
 
   useEffect(() => {
     fetchGroup();
-  }, [params.id]);
+  }, [fetchGroup]);
 
   // Supprimer le groupe
   const handleDeleteGroup = async () => {
