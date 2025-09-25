@@ -1,6 +1,6 @@
 "use client";
-import { CircleCheckBig, CircleDashed, Clock4,TrendingUp,ArrowDown, FileClock,Folder,MessagesSquare,CreditCard,CircleCheckBig as CircleCheckBigIcon  } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { CircleCheckBig, CircleDashed, Clock4,TrendingUp,ArrowDown, FileClock,Folder,MessagesSquare,CreditCard, CircleCheckBigIcon  } from "lucide-react"
+
 import { DashboardCardSkeleton, DashboardTableSkeleton, DashboardStatsSkeleton } from "@/components/ui/table-skeleton"
 import React, { useState, useEffect } from "react"
 
@@ -76,7 +76,7 @@ export default function Dashboard() {
     <div>
       
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <h1 className="text-3xl  font-bold  ">Tableau de bord de votre active Reachdem</h1>
+          <h1 className="text-3xl  font-bold  ">Tableau de bord </h1>
           <p className="text-gray-400 pl-2 ">Aperçu de votre activité et de vos projets SMS</p>
           
           {isLoading ? (
@@ -136,7 +136,7 @@ export default function Dashboard() {
                 <p className=" font-bold text-xl flex flex-row justify-between items-center"> <span>Activité de message</span><TrendingUp color="#1ABC9C" className="bg-green-100 rounded-[100%] px-2 py-1" size={35} /></p>
                 <p className="text-[15px] text-gray-400">Aperçu de vos envoies récents</p>
                 <div className="flex flex-row justify-between items-center ">
-                  <p className="text-gray-400">Aujourd'hui</p>
+                  <p className="text-gray-400">{"Aujourd'hui"}</p>
                   <p className="bg-blue-100 rounded-md px-4">{stats?.messages?.today || 0}</p>
                 </div>
                 <div className="flex flex-row justify-between items-center">
@@ -151,7 +151,7 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-2">
                   <h1 className="font-bold text-xl">Statut</h1>
                   <div className="flex flex-row justify-between items-center">
-                    <p className="font-medium flex gap-1"><CircleCheckBig color="#0bf40f" /> <span>Succès</span></p>
+                    <p className="font-medium flex gap-1"><CircleCheckBigIcon color="#0bf40f" /> <span>Succès</span></p>
                     <p className=" rounded-md px-4 bg-green-100">{stats?.messages?.successful || 0}</p>
                   </div>
                   <div className="flex flex-row justify-between items-center">
@@ -185,7 +185,7 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-2">
                   <h1 className="font-bold text-xl">Total des transactions</h1>
                   <div className="flex flex-row justify-between items-center">
-                    <p className="font-medium flex gap-1"><CircleCheckBig color="#0bf40f" /> <span>Succès</span></p>
+                    <p className="font-medium flex gap-1"><CircleCheckBigIcon color="#0bf40f" /> <span>Succès</span></p>
                     <p className="rounded-md px-4 bg-green-100">{stats?.financial?.successfulTransactions || 0}</p>
                   </div>
                   <div className="flex flex-row justify-between items-center">
@@ -212,7 +212,7 @@ export default function Dashboard() {
           ) : (
             <div className="bg-white border border-zinc-200 rounded-xl shadow-sm transition-shadow duration-200 hover:shadow-md p-6" >
           <p className=" font-bold text-xl flex flex-row justify-between items-center"> <span>Historique des messages</span><FileClock color="#3498DB" className="bg-blue-100  rounded-[100%] px-2 py-1" size={35} /></p>
-          <p className="text-[15px] text-gray-400 py-4">Consultez l'historique de vos envoie SMS récents</p>
+          <p className="text-[15px] text-gray-400 py-4">{"Consultez l'historique de vos envoie SMS récents"}</p>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto">
                 <thead className="bg-zinc-50">

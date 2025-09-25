@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
+
 } from "@/components/motion-primitives/dialog";
 import { Variants, Transition } from "motion/react";
 import { useToast } from "@/hooks/use-toast";
@@ -38,30 +38,7 @@ interface Project {
 }
 
 export default function Projet() {
-  const router = useRouter();
-  const customVariants: Variants = {
-    initial: {
-      opacity: 0,
-      scale: 0.95,
-      y: 40,
-    },
-    animate: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      y: 40,
-    },
-  };
 
-  const customTransition: Transition = {
-    type: "spring",
-    bounce: 0,
-    duration: 0.25,
-  };
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,6 +49,8 @@ export default function Projet() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [activationMessage, setActivationMessage] = useState('');
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
+  const [detailProject, setDetailProject] = useState<Project | null>(null);
 
   const { toast } = useToast();
   const notification = useNotification();
@@ -162,6 +141,12 @@ export default function Projet() {
     setQrCodeUrl(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappUrl)}`);
     
     setIsActivationDialogOpen(true);
+  };
+
+  // Fonction pour voir les détails d'un projet
+  const handleViewDetail = (project: Project) => {
+    setDetailProject(project);
+    setIsDetailDialogOpen(true);
   };
 
 
@@ -338,13 +323,7 @@ export default function Projet() {
                       variant="outline"
                       size="sm"
                       className="w-full"
-                      onClick={() => {
-                        // TODO: Implémenter la vue détail
-                        toast({
-                          title: "Info",
-                          description: "Fonctionnalité de détail à venir",
-                        });
-                      }}
+                      onClick={() => handleViewDetail(project)}
                     >
                       <Eye className="w-4 h-4 mr-2" />
                       Voir détail
@@ -381,7 +360,7 @@ export default function Projet() {
               Activation du projet
             </DialogTitle>
             <DialogDescription className="text-zinc-600 dark:text-zinc-400">
-              Scannez le QR code ou copiez le message pour contacter l'administrateur
+              {"Scannez le QR code ou copiez le message pour contacter l'administrateur"}
             </DialogDescription>
           </DialogHeader>
           
@@ -436,6 +415,144 @@ export default function Projet() {
         variant={notification.options.variant}
         buttonText={notification.options.buttonText}
       />
+
+      {/* Dialog de détail du projet */}
+      <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
+        <DialogContent className="w-full max-w-2xl bg-white p-6 dark:bg-zinc-900">
+          <DialogHeader>
+            <DialogTitle className="text-zinc-900 dark:text-white flex items-center gap-2">
+              <FolderOpen className="w-5 h-5" />
+              Détails du projet
+            </DialogTitle>
+            <DialogDescription className="text-zinc-600 dark:text-zinc-400">
+              Informations complètes sur le projet sélectionné
+            </DialogDescription>
+          </DialogHeader>
+          
+          {detailProject && (
+            <div className="mt-6 space-y-6">
+              {/* Informations principales */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-zinc-700">Nom du projet</Label>
+                    <p className="mt-1 text-lg font-semibold text-zinc-900">{detailProject.sender_name}</p>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-zinc-700">ID du projet</Label>
+                    <p className="mt-1 font-mono text-sm text-zinc-600 bg-zinc-50 p-2 rounded border">
+                      {detailProject.project_id}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-zinc-700">Statut</Label>
+                    <div className="mt-1">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        detailProject.is_active 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {detailProject.is_active ? 'Actif' : 'En attente'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-zinc-700">Date de création</Label>
+                    <p className="mt-1 text-zinc-900">
+                      {new Date(detailProject.created_at).toLocaleDateString('fr-FR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-zinc-700">Heure de création</Label>
+                    <p className="mt-1 text-zinc-900">
+                      {new Date(detailProject.created_at).toLocaleTimeString('fr-FR')}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-zinc-700">Durée d'existence</Label>
+                    <p className="mt-1 text-zinc-900">
+                      {Math.floor((Date.now() - new Date(detailProject.created_at).getTime()) / (1000 * 60 * 60 * 24))} jours
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Actions rapides */}
+              <div className="border-t border-zinc-200 pt-6">
+                <Label className="text-sm font-medium text-zinc-700 mb-3 block">Actions rapides</Label>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(detailProject.project_id);
+                      toast({
+                        title: "Copié",
+                        description: "ID du projet copié dans le presse-papiers",
+                      });
+                    }}
+                  >
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copier l'ID
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const url = window.location.origin + `/dashboard/projet/${detailProject.project_id}`;
+                      navigator.clipboard.writeText(url);
+                      toast({
+                        title: "Copié",
+                        description: "Lien du projet copié dans le presse-papiers",
+                      });
+                    }}
+                  >
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copier le lien
+                  </Button>
+                  
+                  {!detailProject.is_active && (
+                    <Button
+                      size="sm"
+                      className="bg-[#FB953C] hover:bg-[#FB953C]/80 text-white"
+                      onClick={() => {
+                        setIsDetailDialogOpen(false);
+                        handleActivateProject(detailProject);
+                      }}
+                    >
+                      <Power className="w-4 h-4 mr-2" />
+                      Activer le projet
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex justify-end gap-2 mt-6">
+            <Button
+              variant="outline"
+              onClick={() => setIsDetailDialogOpen(false)}
+            >
+              Fermer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
     </div>
   );

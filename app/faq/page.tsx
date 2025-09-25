@@ -61,7 +61,7 @@ export default function FAQPage() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                            Centre d'<span className="text-orange-400">Aide</span>
+                            {"Centre d'"}<span className="text-orange-400">Aide</span>
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                             Trouvez rapidement les réponses à vos questions sur ReachDem. 

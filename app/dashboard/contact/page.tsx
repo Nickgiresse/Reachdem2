@@ -6,11 +6,6 @@ import {
   UserRoundPlus,
   FileUp,
   CircleX,
-  Search,
-  User,
-  Mail,
-  Phone,
-  Clock,
   UserPlus,
   Check,
 } from "lucide-react";
@@ -106,8 +101,6 @@ export default function Contact() {
     address: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   // Fonction pour charger les contacts
   const fetchContacts = async (): Promise<void> => {
     setIsLoadingContacts(true);
@@ -166,8 +159,6 @@ export default function Contact() {
           phone: "",
           address: "",
         });
-        // Fermer le dialog
-        setIsDialogOpen(false);
         // Recharger les contacts
         fetchContacts();
       } else {
@@ -341,7 +332,7 @@ export default function Contact() {
   }>[] = [
     {
       id: "select",
-      header: ({ table }) => (
+      header: () => (
         <div className="flex items-center">
           <input
             type="checkbox"

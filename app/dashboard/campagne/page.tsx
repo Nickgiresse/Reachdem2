@@ -1,7 +1,6 @@
 'use client';
 import {
-  
-
+  RefreshCcw,
   Users,
   CircleX,
   MessageSquareMore,
@@ -40,24 +39,26 @@ export default function Contact() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fonction pour charger les campagnes
+  const fetchCampaigns = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/campaigns');
+      if (response.ok) {
+        const data = await response.json();
+        setCampaigns(data);
+      } else {
+        console.error('Erreur lors du chargement des campagnes');
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des campagnes:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Charger les campagnes au montage du composant
   useEffect(() => {
-    const fetchCampaigns = async () => {
-      try {
-        const response = await fetch('/api/campaigns');
-        if (response.ok) {
-          const data = await response.json();
-          setCampaigns(data);
-        } else {
-          console.error('Erreur lors du chargement des campagnes');
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement des campagnes:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchCampaigns();
   }, []);
 
@@ -134,9 +135,16 @@ export default function Contact() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button 
+            onClick={fetchCampaigns}
+            className="flex items-center gap-2 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-900"
+          >
+            <RefreshCcw color="#000000" />
+            Actualiser
+          </Button>
           <Button className="flex items-center gap-2 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-900">
             Envoyer maintenant
-                        </Button>
+          </Button>
         </div>
       </div>
 

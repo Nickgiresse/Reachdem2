@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react'
-import { CircleX, Plus, ArrowLeft, MessageSquare, Smartphone } from 'lucide-react';
+import {  Plus, ArrowLeft, MessageSquare, Smartphone } from 'lucide-react';
 
 import {
     Dialog,
@@ -9,7 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    DialogClose,
+   
   } from '@/components/motion-primitives/dialog';
   import { Variants, Transition } from 'motion/react';
 import { TransitionPanel } from './motion-primitives/transition-panel';

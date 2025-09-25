@@ -179,7 +179,7 @@ export default function GroupDetail({ params }: { params: { id: string } }) {
         </div>
         <Card className="p-6 text-center">
           <Boxes className="w-12 h-12 mx-auto mb-4 text-zinc-400" />
-          <p className="text-zinc-500">Le groupe demandé n'existe pas.</p>
+          <p className="text-zinc-500">{"Le groupe demandé n'existe pas."}</p>
         </Card>
       </div>
     );

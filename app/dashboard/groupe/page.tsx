@@ -5,11 +5,6 @@ import {
   Boxes,
   CircleX,
   Search,
-  User,
-  Mail,
-  Phone,
-  Clock,
-  Users,
   Trash2,
 } from "lucide-react";
 

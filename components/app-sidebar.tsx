@@ -1,14 +1,10 @@
 import * as React from "react"
 import {
-  
-  Command,
+
   Frame,
-  MessageSquareDot,
+
   PieChart,
-  Settings,
-  User,
-  House,
-  Boxes,
+
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -50,7 +46,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
     teams: { name: string; logo: "MessageSquareDot" | "House" | "Command"; plan: string }[]
     navMain: NavMainItem[]
     projects: ProjectItem[]
-    plateform: { name: string; url: string; icon: any }[]
+    plateform: { name: string; url: string; icon: object }[]
   } = {
     user: {
       name: session?.user?.name ?? session?.user?.email ?? "Utilisateur",

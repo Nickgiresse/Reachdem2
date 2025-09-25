@@ -12,7 +12,9 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
+  Table as TanStackTable,
 } from "@tanstack/react-table"
+import type { Header, Row, Cell } from "@tanstack/react-table"
 
 import { ChevronDown } from "lucide-react"
 
@@ -54,17 +56,17 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
-  const selectionColumn: ColumnDef<TData, any> | null = selectable
+  const selectionColumn: ColumnDef<TData, TValue> | null = selectable
     ? {
         id: "select",
-        header: ({ table }: any) => (
+        header: ({ table }: { table: TanStackTable<TData> }) => (
           <Checkbox
             checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
             onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(!!value)}
             aria-label="Sélectionner tout"
           />
         ),
-        cell: ({ row }: any) => (
+        cell: ({ row }: { row: Row<TData> }) => (
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
@@ -77,7 +79,7 @@ export function DataTable<TData, TValue>({
     : null
 
   const finalColumns = React.useMemo(() => {
-    return selectionColumn ? ([selectionColumn, ...columns] as ColumnDef<TData, any>[]) : (columns as ColumnDef<TData, any>[])
+    return selectionColumn ? ([selectionColumn, ...columns] as ColumnDef<TData, TValue>[]) : (columns as ColumnDef<TData, TValue>[])
   }, [columns, selectionColumn])
 
   const table = useReactTable({
@@ -119,8 +121,8 @@ export function DataTable<TData, TValue>({
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()
-              .filter((column: any) => column.getCanHide())
-              .map((column: any) => {
+              .filter((column) => column.getCanHide())
+              .map((column) => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -138,9 +140,9 @@ export function DataTable<TData, TValue>({
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup: any) => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header: any) => {
+                {headerGroup.headers.map((header: Header<TData, unknown>) => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
@@ -154,9 +156,9 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row: any) => (
+              table.getRowModel().rows.map((row: Row<TData>) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                  {row.getVisibleCells().map((cell: any) => (
+                  {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
