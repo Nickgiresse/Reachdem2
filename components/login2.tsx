@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 // import { Label } from "@/components/ui/label";
-import React from "react"
+import React, { useEffect } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
@@ -46,6 +46,7 @@ const Login2 = ({
   const [isPending, setisPending]= useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showAdminLink, setShowAdminLink] = useState(false)
 
   // Fonction pour gérer les changements dans les champs
   const handleInputChange = (field: 'email' | 'password', value: string) => {
@@ -55,6 +56,15 @@ const Login2 = ({
       setPassword(value);
     }
   };
+
+  // Vérifier si les identifiants admin sont saisis
+  useEffect(() => {
+    if (email === 'admin@reachdem.co' && password === 'admin123') {
+      setShowAdminLink(true);
+    } else {
+      setShowAdminLink(false);
+    }
+  }, [email, password]);
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     
@@ -145,6 +155,16 @@ const Login2 = ({
                 Sign up
               </a>
             </div>
+            {showAdminLink && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <a
+                  href="/admin/dashboard"
+                  className="text-blue-600 font-medium hover:underline flex items-center gap-2"
+                >
+                  🔑 Accéder au Dashboard Administrateur
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

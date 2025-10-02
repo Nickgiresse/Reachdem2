@@ -1,13 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@/generated/prisma';
+import { getCurrentUser } from '@/lib/auth-utils';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    // Pour l'instant, on récupère tous les projets
-    // Dans une vraie application, vous devriez filtrer par utilisateur connecté
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
+    // Récupérer seulement les projets de l'utilisateur connecté
     const projects = await prisma.project.findMany({
+      where: {
+        user_id: currentUser.id
+      },
       select: {
         project_id: true,
         sender_name: true,
@@ -40,6 +52,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { sender_name } = body;
 
@@ -51,24 +72,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Récupérer le premier utilisateur existant ou créer un utilisateur par défaut
-    let defaultUser = await prisma.user.findFirst();
-    
-    if (!defaultUser) {
-      // Créer un utilisateur par défaut
-      defaultUser = await prisma.user.create({
-        data: {
-          email: "default@example.com",
-          name: "Utilisateur par défaut",
-        }
-      });
-    }
-
-    // Créer le projet
+    // Créer le projet pour l'utilisateur connecté
     const project = await prisma.project.create({
       data: {
         sender_name: sender_name.trim(),
-        user_id: defaultUser.id,
+        user_id: currentUser.id,
       },
     });
 

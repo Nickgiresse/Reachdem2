@@ -67,11 +67,7 @@ export async function GET(request: NextRequest) {
         ? message.content.substring(0, 50) + '...' 
         : message.content,
       recipient: message.campaigns[0]?.campaign?.group?.name || 'N/A',
-      status: message.delivered_status === 'PENDING' ? 'En attente' :
-              message.delivered_status === 'SENT' ? 'Envoyé' :
-              message.delivered_status === 'DELIVERED' ? 'Livré' :
-              message.delivered_status === 'FAILED' ? 'Échec' :
-              message.delivered_status === 'EXPIRED' ? 'Expiré' : 'Inconnu',
+      status: message.delivered_status, // Garder le statut original pour la logique côté client
       date: message.sent_at 
         ? new Date(message.sent_at).toLocaleDateString('fr-FR', {
             year: 'numeric',
@@ -87,7 +83,9 @@ export async function GET(request: NextRequest) {
             hour: '2-digit',
             minute: '2-digit'
           }),
-      project: message.campaigns[0]?.campaign?.project?.sender_name || 'N/A'
+      project: message.campaigns[0]?.campaign?.project?.sender_name || 'N/A',
+      group: message.campaigns[0]?.campaign?.group?.name || 'N/A',
+      campaign: message.campaigns[0]?.campaign?.name || 'N/A'
     }));
 
     return NextResponse.json(formattedMessages);
