@@ -159,6 +159,7 @@ export default function Projet() {
         title: "Succès",
         description: "Message copié dans le presse-papiers !",
       });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       toast({
         variant: "destructive",
@@ -186,6 +187,7 @@ export default function Projet() {
         title: "Succès",
         description: "QR code téléchargé avec succès !",
       });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       toast({
         variant: "destructive",
