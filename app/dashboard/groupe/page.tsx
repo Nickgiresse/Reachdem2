@@ -374,7 +374,7 @@ export default function Groupe() {
                         placeholder="Entrer la description du groupe"
                       />
                       <div className="w-full">
-                        <div className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
+                        <div className="min-h-[80px] w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
                           <div className="flex flex-wrap gap-2">
                             {selectedContacts.length === 0 && (
                               <span className="text-sm text-zinc-500">Aucun contact sélectionné</span>
