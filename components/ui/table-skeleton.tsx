@@ -253,6 +253,36 @@ export function DashboardStatsSkeleton() {
   );
 }
 
+export function MessageTableSkeleton() {
+  return (
+    <div className="w-full">
+      {/* Header skeleton */}
+      <div className="flex space-x-4 p-4 border-b border-zinc-200">
+        <div className="h-4 w-48 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-4 w-32 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-4 w-24 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-4 w-20 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-4 w-28 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-4 w-16 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-4 w-24 bg-zinc-200 rounded animate-pulse" />
+      </div>
+      
+      {/* Rows skeleton */}
+      {Array.from({ length: 8 }).map((_, rowIndex) => (
+        <div key={rowIndex} className="flex space-x-4 p-4 border-b border-zinc-100">
+          <div className="h-4 w-56 bg-zinc-100 rounded animate-pulse" />
+          <div className="h-4 w-36 bg-zinc-100 rounded animate-pulse" />
+          <div className="h-4 w-28 bg-zinc-100 rounded animate-pulse" />
+          <div className="h-4 w-24 bg-zinc-100 rounded animate-pulse" />
+          <div className="h-4 w-32 bg-zinc-100 rounded animate-pulse" />
+          <div className="h-6 w-20 bg-zinc-100 rounded-full animate-pulse" />
+          <div className="h-4 w-28 bg-zinc-100 rounded animate-pulse" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function DashboardTableSkeleton() {
   return (
     <div className="bg-white border border-zinc-200 rounded-xl shadow-sm animate-pulse">

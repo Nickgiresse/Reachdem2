@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@/generated/prisma';
+import { getCurrentUser } from '@/lib/auth-utils';
 
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { group_id, contact_ids } = body;
 
@@ -16,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Vérifier que le groupe existe
+    // Vérifier que le groupe existe et appartient à l'utilisateur connecté
     const group = await prisma.group.findUnique({
       where: { group_id },
     });
@@ -28,14 +38,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Vérifier que tous les contacts existent
+    if (group.user_id !== currentUser.id) {
+      return NextResponse.json(
+        { error: 'Non autorisé à modifier ce groupe' },
+        { status: 403 }
+      );
+    }
+
+    // Récupérer les projets de l'utilisateur pour vérifier les contacts
+    const userProjects = await prisma.project.findMany({
+      where: { user_id: currentUser.id },
+      select: { project_id: true }
+    });
+
+    const userProjectIds = userProjects.map(p => p.project_id);
+
+    // Récupérer les phonebooks des projets de l'utilisateur
+    const userPhonebooks = await prisma.phonebook.findMany({
+      where: { project_id: { in: userProjectIds } },
+      select: { phonebook_id: true }
+    });
+
+    const userPhonebookIds = userPhonebooks.map(pb => pb.phonebook_id);
+
+    // Vérifier que tous les contacts existent et appartiennent à l'utilisateur connecté
     const contacts = await prisma.contact.findMany({
-      where: { contact_id: { in: contact_ids } },
+      where: { 
+        contact_id: { in: contact_ids },
+        phonebook_id: { in: userPhonebookIds }
+      },
     });
 
     if (contacts.length !== contact_ids.length) {
       return NextResponse.json(
-        { error: 'Un ou plusieurs contacts non trouvés' },
+        { error: 'Un ou plusieurs contacts non trouvés ou non autorisés' },
         { status: 404 }
       );
     }

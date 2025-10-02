@@ -28,6 +28,8 @@ import { NotificationDialog } from "@/components/ui/notification-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProjectCardSkeleton } from "@/components/ui/table-skeleton";
+import PaymentForm from "@/components/PaymentForm";
+// import TestNotchPay from "@/components/TestNotchPay";
 import React, { useState, useEffect } from "react";
 
 
@@ -52,6 +54,8 @@ export default function Projet() {
   const [activationMessage, setActivationMessage] = useState('');
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [detailProject, setDetailProject] = useState<Project | null>(null);
+  const [isRechargeDialogOpen, setIsRechargeDialogOpen] = useState(false);
+  const [rechargeProject, setRechargeProject] = useState<Project | null>(null);
 
   const { toast } = useToast();
   const notification = useNotification();
@@ -150,6 +154,32 @@ export default function Projet() {
     setIsDetailDialogOpen(true);
   };
 
+  // Fonction pour ouvrir le dialog de rechargement
+  const handleRecharge = (project: Project) => {
+    setRechargeProject(project);
+    setIsRechargeDialogOpen(true);
+  };
+
+  // Fonction pour gérer le succès du rechargement
+  const handleRechargeSuccess = (transaction: any) => {
+    toast({
+      title: "Rechargement réussi",
+      description: "Votre rechargement a été traité avec succès.",
+    });
+    setIsRechargeDialogOpen(false);
+    setRechargeProject(null);
+  };
+
+  // Fonction pour gérer l'erreur du rechargement
+  const handleRechargeError = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Erreur de rechargement",
+      description: error.message || "Une erreur est survenue lors du rechargement",
+    });
+  };
+
+
 
   // Fonction pour copier le message
   const handleCopyMessage = async () => {
@@ -218,6 +248,8 @@ export default function Projet() {
             <RefreshCcw color="#000000" />
             Actualiser
           </Button>
+          
+          {/* <TestNotchPay /> */}
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger className="bg-[#FB953C] px-4 py-2 text-sm text-white hover:bg-[#FB953C]/80 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100">
@@ -332,18 +364,30 @@ export default function Projet() {
                       Voir détail
                     </Button>
                     
-                    <Button
-                      size="sm"
-                      className={`w-full ${
-                        project.is_active 
-                          ? 'bg-green-500 hover:bg-green-600' 
-                          : 'bg-[#FB953C] hover:bg-[#FB953C]/80'
-                      } text-white`}
-                      onClick={() => handleActivateProject(project)}
-                    >
-                      <Power className="w-4 h-4 mr-2" />
-                      {project.is_active ? 'Actif' : 'Activer'}
-                    </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        size="sm"
+                        className={`${
+                          project.is_active 
+                            ? 'bg-green-500 hover:bg-green-600' 
+                            : 'bg-[#FB953C] hover:bg-[#FB953C]/80'
+                        } text-white`}
+                        onClick={() => handleActivateProject(project)}
+                      >
+                        <Power className="w-4 h-4 mr-1" />
+                        {project.is_active ? 'Actif' : 'Activer'}
+                      </Button>
+                      
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                        onClick={() => handleRecharge(project)}
+                      >
+                        <QrCode className="w-4 h-4 mr-1" />
+                        Recharger
+                      </Button>
+                    </div>
 
                   </div>
                   
@@ -420,6 +464,29 @@ export default function Projet() {
         variant={notification.options.variant}
         buttonText={notification.options.buttonText}
       />
+
+      {/* Dialog de rechargement */}
+      <Dialog open={isRechargeDialogOpen} onOpenChange={setIsRechargeDialogOpen}>
+        <DialogContent className="w-full max-w-md bg-white p-6 dark:bg-zinc-900">
+          <DialogHeader>
+            <DialogTitle className="text-zinc-900 dark:text-white flex items-center gap-2">
+              <QrCode className="w-5 h-5" />
+              Recharger le projet
+            </DialogTitle>
+            <DialogDescription className="text-zinc-600 dark:text-zinc-400">
+              {rechargeProject && `Recharger le projet "${rechargeProject.sender_name}"`}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mt-6">
+            <PaymentForm
+              onSuccess={handleRechargeSuccess}
+              onError={handleRechargeError}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
 
       {/* Dialog de détail du projet */}
       <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
@@ -530,19 +597,34 @@ export default function Projet() {
                     Copier le lien
                   </Button>
                   
-                  {!detailProject.is_active && (
+                  <div className="flex gap-2">
+                    {!detailProject.is_active && (
+                      <Button
+                        size="sm"
+                        className="bg-[#FB953C] hover:bg-[#FB953C]/80 text-white"
+                        onClick={() => {
+                          setIsDetailDialogOpen(false);
+                          handleActivateProject(detailProject);
+                        }}
+                      >
+                        <Power className="w-4 h-4 mr-2" />
+                        Activer le projet
+                      </Button>
+                    )}
+                    
                     <Button
                       size="sm"
-                      className="bg-[#FB953C] hover:bg-[#FB953C]/80 text-white"
+                      variant="outline"
+                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
                       onClick={() => {
                         setIsDetailDialogOpen(false);
-                        handleActivateProject(detailProject);
+                        handleRecharge(detailProject);
                       }}
                     >
-                      <Power className="w-4 h-4 mr-2" />
-                      Activer le projet
+                      <QrCode className="w-4 h-4 mr-2" />
+                      Recharger
                     </Button>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>

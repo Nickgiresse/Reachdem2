@@ -20,6 +20,7 @@ model User {
   Project       Project[]
   accounts      Session[]
   UserProfile   UserProfile?
+  groups        Group[]
 
   @@map("user")
 }
@@ -136,10 +137,12 @@ model Group {
   group_id    String         @id @default(cuid())
   name        String
   description String?
+  user_id     String
   created_at  DateTime       @default(now())
   updated_at  DateTime       @updatedAt
   campaigns   Campaign[]
   contacts    GroupContact[]
+  user        User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("groups")
 }

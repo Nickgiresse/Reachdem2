@@ -89,7 +89,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
       },
       {
         title: "Settings",
-        url: "/dashboard/setting",
+        url: "/dashboard/settings",
         icon: "Settings",
       },
     ],

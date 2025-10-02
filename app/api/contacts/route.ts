@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth-utils";
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { firstName, lastName, email, phone, address } = body;
 
@@ -14,45 +24,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Créer ou récupérer un phonebook par défaut
+    // Récupérer ou créer un projet pour l'utilisateur connecté
+    let userProject = await prisma.project.findFirst({
+      where: { 
+        user_id: currentUser.id,
+        sender_name: "Projet par défaut"
+      }
+    });
+
+    if (!userProject) {
+      userProject = await prisma.project.create({
+        data: {
+          sender_name: "Projet par défaut",
+          user_id: currentUser.id,
+        }
+      });
+    }
+
+    // Créer ou récupérer un phonebook par défaut pour cet utilisateur
     let defaultPhonebook = await prisma.phonebook.findFirst({
-      where: { name: "Contacts par défaut" }
+      where: { 
+        name: "Contacts par défaut",
+        project_id: userProject.project_id
+      }
     });
 
     if (!defaultPhonebook) {
-      // Récupérer le premier utilisateur existant ou créer un utilisateur par défaut
-      let defaultUser = await prisma.user.findFirst();
-      
-      if (!defaultUser) {
-        // Créer un utilisateur par défaut
-        defaultUser = await prisma.user.create({
-          data: {
-            email: "default@example.com",
-            name: "Utilisateur par défaut",
-          }
-        });
-      }
-
-      // Créer un projet par défaut
-      let defaultProject = await prisma.project.findFirst({
-        where: { sender_name: "Projet par défaut" }
-      });
-
-      if (!defaultProject) {
-        defaultProject = await prisma.project.create({
-          data: {
-            sender_name: "Projet par défaut",
-            user_id: defaultUser.id,
-          }
-        });
-      }
-
-      // Créer le phonebook par défaut
       defaultPhonebook = await prisma.phonebook.create({
         data: {
           name: "Contacts par défaut",
           description: "Phonebook par défaut pour les contacts",
-          project_id: defaultProject.project_id,
+          project_id: userProject.project_id,
         }
       });
     }
@@ -83,7 +85,36 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
+    // Récupérer les projets de l'utilisateur connecté
+    const userProjects = await prisma.project.findMany({
+      where: { user_id: currentUser.id },
+      select: { project_id: true }
+    });
+
+    const userProjectIds = userProjects.map(p => p.project_id);
+
+    // Récupérer les phonebooks des projets de l'utilisateur
+    const userPhonebooks = await prisma.phonebook.findMany({
+      where: { project_id: { in: userProjectIds } },
+      select: { phonebook_id: true }
+    });
+
+    const userPhonebookIds = userPhonebooks.map(pb => pb.phonebook_id);
+
+    // Récupérer seulement les contacts de l'utilisateur connecté
     const contacts = await prisma.contact.findMany({
+      where: {
+        phonebook_id: { in: userPhonebookIds }
+      },
       include: {
         groups: {
           include: {

@@ -1,11 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@/generated/prisma';
+import { getCurrentUser } from '@/lib/auth-utils';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
+    // Récupérer seulement les groupes de l'utilisateur connecté
     const groups = await prisma.group.findMany({
+      where: {
+        user_id: currentUser.id
+      },
       include: {
         contacts: {
           select: {
@@ -41,6 +55,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { name, description, contactIds } = body;
 
@@ -52,11 +75,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Créer le groupe
+    // Créer le groupe pour l'utilisateur connecté
     const group = await prisma.group.create({
       data: {
         name: name.trim(),
         description: description?.trim() || null,
+        user_id: currentUser.id,
       },
     });
 
@@ -120,6 +144,15 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const groupId = searchParams.get('id');
 
@@ -130,7 +163,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Vérifier que le groupe existe
+    // Vérifier que le groupe existe et appartient à l'utilisateur connecté
     const group = await prisma.group.findUnique({
       where: { group_id: groupId },
     });
@@ -139,6 +172,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'Groupe non trouvé' },
         { status: 404 }
+      );
+    }
+
+    if (group.user_id !== currentUser.id) {
+      return NextResponse.json(
+        { error: 'Non autorisé à supprimer ce groupe' },
+        { status: 403 }
       );
     }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { Boxes, House, Settings, User } from "lucide-react"
+import { Boxes, House, Settings, User, Shield, Users } from "lucide-react"
 import Link from "next/link"
 
 import {
@@ -21,6 +21,8 @@ const ICONS = {
   User,
   Boxes,
   Settings,
+  Shield,
+  Users,
 } as const
 
 export function NavMain({

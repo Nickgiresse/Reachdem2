@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@/generated/prisma';
+import { getCurrentUser } from '@/lib/auth-utils';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
+    // Récupérer seulement les campagnes des projets de l'utilisateur connecté
     const campaigns = await prisma.campaign.findMany({
+      where: {
+        project: {
+          user_id: currentUser.id
+        }
+      },
       include: {
         project: {
           select: {
@@ -61,6 +77,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { name, project_id, group_ids, message } = body;
 
@@ -72,7 +97,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Vérifier que le projet existe
+    // Vérifier que le projet existe et appartient à l'utilisateur connecté
     const project = await prisma.project.findUnique({
       where: { project_id },
     });
@@ -84,14 +109,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Vérifier que tous les groupes existent
+    if (project.user_id !== currentUser.id) {
+      return NextResponse.json(
+        { error: 'Non autorisé à créer des campagnes pour ce projet' },
+        { status: 403 }
+      );
+    }
+
+    // Vérifier que tous les groupes existent et appartiennent à l'utilisateur connecté
     const groups = await prisma.group.findMany({
-      where: { group_id: { in: group_ids } },
+      where: { 
+        group_id: { in: group_ids },
+        user_id: currentUser.id
+      },
     });
 
     if (groups.length !== group_ids.length) {
       return NextResponse.json(
-        { error: 'Un ou plusieurs groupes non trouvés' },
+        { error: 'Un ou plusieurs groupes non trouvés ou non autorisés' },
         { status: 404 }
       );
     }
