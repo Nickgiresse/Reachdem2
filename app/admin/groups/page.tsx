@@ -46,65 +46,12 @@ export default function AdminGroupsPage() {
     const fetchGroups = async () => {
       setIsLoading(true);
       try {
-        // Simuler des données pour la démo
-        const mockGroups: Group[] = [
-          {
-            id: "1",
-            name: "Clients VIP",
-            description: "Groupe des clients les plus importants",
-            createdAt: "2024-01-15T10:30:00Z",
-            updatedAt: "2024-01-15T10:30:00Z",
-            user: {
-              id: "user1",
-              name: "John Doe",
-              email: "john.doe@example.com",
-            },
-            project: {
-              id: "project1",
-              name: "E-commerce 2024",
-            },
-            contactCount: 89,
-            campaignCount: 12,
-          },
-          {
-            id: "2",
-            name: "Newsletter",
-            description: "Abonnés à la newsletter",
-            createdAt: "2024-01-14T14:20:00Z",
-            updatedAt: "2024-01-14T14:20:00Z",
-            user: {
-              id: "user2",
-              name: "Marie Martin",
-              email: "marie.martin@example.com",
-            },
-            project: {
-              id: "project2",
-              name: "Marketing Digital",
-            },
-            contactCount: 450,
-            campaignCount: 8,
-          },
-          {
-            id: "3",
-            name: "Prospects",
-            description: "Liste des prospects potentiels",
-            createdAt: "2024-01-13T09:15:00Z",
-            updatedAt: "2024-01-13T09:15:00Z",
-            user: {
-              id: "user3",
-              name: "Pierre Durand",
-              email: "pierre.durand@example.com",
-            },
-            project: {
-              id: "project3",
-              name: "Ventes",
-            },
-            contactCount: 125,
-            campaignCount: 3,
-          },
-        ];
-
-        setGroups(mockGroups);
+        const response = await fetch('/api/admin/groups');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des groupes');
+        }
+        const data = await response.json();
+        setGroups(data);
       } catch (error) {
         console.error('Erreur lors du chargement des groupes:', error);
         toast({

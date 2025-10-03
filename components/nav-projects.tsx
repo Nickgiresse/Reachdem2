@@ -1,6 +1,6 @@
 "use client"
 
-import {  Frame, PieChart, Map, FolderDot, Contact, Users2, Folder, Megaphone, MessageSquare } from "lucide-react"
+import {  Frame, PieChart, Map, FolderDot, Contact, Users2, Folder, Megaphone, MessageSquare, CheckCircle } from "lucide-react"
 import Link from "next/link"
 
 
@@ -24,6 +24,7 @@ const ICONS = {
   Folder,
   Megaphone,
   MessageSquare,
+  CheckCircle,
 } as const
 
 export function NavProjects({

@@ -66,110 +66,12 @@ export default function AdminCampaignsPage() {
     const fetchCampaigns = async () => {
       setIsLoading(true);
       try {
-        // Simuler des données pour la démo
-        const mockCampaigns: Campaign[] = [
-          {
-            id: "1",
-            name: "Promotion Black Friday",
-            status: "COMPLETED",
-            scheduledAt: "2024-01-15T10:00:00Z",
-            createdAt: "2024-01-14T15:30:00Z",
-            updatedAt: "2024-01-15T12:00:00Z",
-            user: {
-              id: "user1",
-              name: "John Doe",
-              email: "john.doe@example.com",
-            },
-            project: {
-              id: "project1",
-              name: "E-commerce 2024",
-            },
-            group: {
-              id: "group1",
-              name: "Clients VIP",
-            },
-            messages: [
-              {
-                id: "msg1",
-                content: "Découvrez nos offres Black Friday ! Jusqu'à -50% sur tous nos produits.",
-              },
-            ],
-            stats: {
-              totalRecipients: 1000,
-              sent: 1000,
-              delivered: 950,
-              failed: 50,
-            },
-          },
-          {
-            id: "2",
-            name: "Newsletter Janvier",
-            status: "RUNNING",
-            scheduledAt: "2024-01-16T09:00:00Z",
-            createdAt: "2024-01-15T14:20:00Z",
-            updatedAt: "2024-01-16T09:00:00Z",
-            user: {
-              id: "user2",
-              name: "Marie Martin",
-              email: "marie.martin@example.com",
-            },
-            project: {
-              id: "project2",
-              name: "Marketing Digital",
-            },
-            group: {
-              id: "group2",
-              name: "Newsletter",
-            },
-            messages: [
-              {
-                id: "msg2",
-                content: "Bonne année ! Découvrez nos nouveautés de janvier.",
-              },
-            ],
-            stats: {
-              totalRecipients: 500,
-              sent: 300,
-              delivered: 280,
-              failed: 20,
-            },
-          },
-          {
-            id: "3",
-            name: "Rappel de paiement",
-            status: "SCHEDULED",
-            scheduledAt: "2024-01-17T14:00:00Z",
-            createdAt: "2024-01-16T10:15:00Z",
-            updatedAt: "2024-01-16T10:15:00Z",
-            user: {
-              id: "user3",
-              name: "Pierre Durand",
-              email: "pierre.durand@example.com",
-            },
-            project: {
-              id: "project3",
-              name: "Facturation",
-            },
-            group: {
-              id: "group3",
-              name: "Clients en retard",
-            },
-            messages: [
-              {
-                id: "msg3",
-                content: "Rappel : Votre facture est en retard de paiement.",
-              },
-            ],
-            stats: {
-              totalRecipients: 50,
-              sent: 0,
-              delivered: 0,
-              failed: 0,
-            },
-          },
-        ];
-
-        setCampaigns(mockCampaigns);
+        const response = await fetch('/api/admin/campaigns');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des campagnes');
+        }
+        const data = await response.json();
+        setCampaigns(data);
       } catch (error) {
         console.error('Erreur lors du chargement des campagnes:', error);
         toast({

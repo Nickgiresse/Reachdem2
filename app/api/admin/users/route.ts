@@ -7,9 +7,19 @@ export async function GET(request: NextRequest) {
   try {
     const users = await prisma.user.findMany({
       include: {
-        UserProfile: true,
+        UserProfile: {
+          select: {
+            is_ban: true,
+            first_name: true,
+            last_name: true,
+            last_connection: true,
+          }
+        },
         Project: {
-          include: {
+          select: {
+            project_id: true,
+            sender_name: true,
+            created_at: true,
             _count: {
               select: {
                 campaigns: true,
@@ -17,29 +27,44 @@ export async function GET(request: NextRequest) {
               }
             }
           }
+        },
+        _count: {
+          select: {
+            Project: true
+          }
         }
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: 'desc',
+      },
     });
 
     // Transformer les données pour correspondre au format attendu par le frontend
-    const formattedUsers = users.map(user => ({
-      id: user.id,
-      name: user.name || (user.UserProfile ? `${user.UserProfile.first_name} ${user.UserProfile.last_name}` : null),
-      email: user.email,
-      emailVerified: user.emailVerified,
-      createdAt: user.createdAt.toISOString(),
-      lastLogin: user.UserProfile?.last_connection?.toISOString(),
-      isActive: !user.UserProfile?.is_ban,
-      stats: {
-        projects: user.Project.length,
-        campaigns: user.Project.reduce((acc, project) => acc + project._count.campaigns, 0),
-        messages: 0, // Calculé séparément si nécessaire
-        contacts: user.Project.reduce((acc, project) => acc + project._count.phonebooks, 0)
-      }
-    }));
+    const formattedUsers = users.map((user) => {
+      // Calculer les statistiques
+      const totalProjects = user.Project.length;
+      const totalCampaigns = user.Project.reduce((sum, project) => sum + project._count.campaigns, 0);
+      const totalContacts = user.Project.reduce((sum, project) => sum + project._count.phonebooks, 0);
+      const totalMessages = 0; // À calculer si nécessaire
+
+      return {
+        id: user.id,
+        name: user.UserProfile?.first_name && user.UserProfile?.last_name 
+          ? `${user.UserProfile.first_name} ${user.UserProfile.last_name}`
+          : user.name || 'Utilisateur sans nom',
+        email: user.email,
+        emailVerified: user.emailVerified,
+        createdAt: user.createdAt.toISOString(),
+        lastLogin: user.UserProfile?.last_connection?.toISOString(),
+        isActive: !user.UserProfile?.is_ban,
+        stats: {
+          projects: totalProjects,
+          campaigns: totalCampaigns,
+          messages: totalMessages,
+          contacts: totalContacts,
+        },
+      };
+    });
 
     return NextResponse.json(formattedUsers);
   } catch (error) {
@@ -47,6 +72,60 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Erreur lors de la récupération des utilisateurs',
+        details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('id');
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'ID utilisateur requis' },
+        { status: 400 }
+      );
+    }
+
+    // Vérifier que l'utilisateur existe
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        _count: {
+          select: {
+            Project: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Utilisateur non trouvé' },
+        { status: 404 }
+      );
+    }
+
+    // Supprimer l'utilisateur (les relations seront supprimées automatiquement grâce à onDelete: Cascade)
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return NextResponse.json({ 
+      success: true,
+      message: `Utilisateur ${user.email} supprimé avec succès`
+    });
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+    return NextResponse.json(
+      { 
+        error: 'Erreur lors de la suppression de l\'utilisateur',
         details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
       },
       { status: 500 }

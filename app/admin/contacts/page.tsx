@@ -49,60 +49,12 @@ export default function AdminContactsPage() {
     const fetchContacts = async () => {
       setIsLoading(true);
       try {
-        // Simuler des données pour la démo
-        const mockContacts: ContactData[] = [
-          {
-            id: "1",
-            firstName: "Jean",
-            lastName: "Dupont",
-            email: "jean.dupont@example.com",
-            phone: "+33 1 23 45 67 89",
-            address: "123 Rue de la Paix, Paris",
-            createdAt: "2024-01-15T10:30:00Z",
-            user: {
-              id: "user1",
-              name: "John Doe",
-              email: "john.doe@example.com",
-            },
-            groups: [
-              { id: "group1", name: "Clients VIP" },
-              { id: "group2", name: "Newsletter" },
-            ],
-          },
-          {
-            id: "2",
-            firstName: "Marie",
-            lastName: "Martin",
-            email: "marie.martin@example.com",
-            phone: "+33 1 98 76 54 32",
-            address: "456 Avenue des Champs, Lyon",
-            createdAt: "2024-01-14T14:20:00Z",
-            user: {
-              id: "user2",
-              name: "Marie Martin",
-              email: "marie.martin@example.com",
-            },
-            groups: [
-              { id: "group3", name: "Prospects" },
-            ],
-          },
-          {
-            id: "3",
-            firstName: "Pierre",
-            lastName: "Durand",
-            email: "pierre.durand@example.com",
-            phone: "+33 1 55 44 33 22",
-            createdAt: "2024-01-13T09:15:00Z",
-            user: {
-              id: "user3",
-              name: "Pierre Durand",
-              email: "pierre.durand@example.com",
-            },
-            groups: [],
-          },
-        ];
-
-        setContacts(mockContacts);
+        const response = await fetch('/api/admin/contacts');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des contacts');
+        }
+        const data = await response.json();
+        setContacts(data);
       } catch (error) {
         console.error('Erreur lors du chargement des contacts:', error);
         toast({

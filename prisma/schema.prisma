@@ -94,6 +94,7 @@ model UserProfile {
 model Project {
   project_id  String      @id @default(cuid())
   sender_name String
+  status      ProjectStatus @default(PENDING)
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
   user_id     String
@@ -227,4 +228,11 @@ enum CampaignStatus {
   COMPLETED
   PAUSED
   CANCELLED
+}
+
+enum ProjectStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  REJECTED
 }
