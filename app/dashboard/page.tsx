@@ -70,6 +70,7 @@ export default function Dashboard() {
     };
 
     fetchDashboardData();
+
   }, []);
 
   return (
@@ -264,3 +265,4 @@ export default function Dashboard() {
     </div>
   )
 }
+
