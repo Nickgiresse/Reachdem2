@@ -106,6 +106,11 @@ export async function AppAdminSidebar({ ...props }: React.ComponentProps<typeof 
         icon: "Folder",
       },
       {
+        name: "Activation Projets",
+        url: "/admin/projects/activate",
+        icon: "CheckCircle",
+      },
+      {
         name: "Campagnes",
         url: "/admin/campaigns",
         icon: "Megaphone",

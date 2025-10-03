@@ -11,6 +11,7 @@ import {
   FolderOpen,
   MessageSquare,
   BarChart3,
+  Trash2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -111,6 +112,37 @@ export default function AdminUsersPage() {
         variant: "destructive",
         title: "Erreur",
         description: "Erreur lors de la mise à jour du statut",
+      });
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur "${userName}" ? Cette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/users?id=${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erreur lors de la suppression');
+      }
+
+      // Supprimer l'utilisateur de la liste locale
+      setUsers(prev => prev.filter(user => user.id !== userId));
+      
+      toast({
+        title: "Succès",
+        description: `Utilisateur "${userName}" supprimé avec succès`,
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la suppression de l'utilisateur",
       });
     }
   };
@@ -241,6 +273,13 @@ export default function AdminUsersPage() {
               ) : (
                 <UserCheck className="w-4 h-4" />
               )}
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => handleDeleteUser(user.id, user.name)}
+            >
+              <Trash2 className="w-4 h-4" />
             </Button>
           </div>
         );

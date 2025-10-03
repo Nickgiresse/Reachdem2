@@ -20,22 +20,15 @@ import { useToast } from "@/hooks/use-toast";
 import React, { useState, useEffect } from "react";
 
 interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  stats: {
-    contactCount: number;
-    groupCount: number;
-    campaignCount: number;
-    messageCount: number;
-  };
+  project_id: string;
+  sender_name: string;
+  status: string;
+  created_at: string;
+  user: string;
+  userName: string;
+  campaigns: number;
+  phonebooks: number;
+  is_active: boolean;
 }
 
 export default function AdminProjectsPage() {
@@ -48,65 +41,14 @@ export default function AdminProjectsPage() {
     const fetchProjects = async () => {
       setIsLoading(true);
       try {
-        // Simuler des données pour la démo
-        const mockProjects: Project[] = [
-          {
-            id: "1",
-            name: "E-commerce 2024",
-            description: "Projet de marketing pour l'e-commerce",
-            createdAt: "2024-01-15T10:30:00Z",
-            updatedAt: "2024-01-15T10:30:00Z",
-            user: {
-              id: "user1",
-              name: "John Doe",
-              email: "john.doe@example.com",
-            },
-            stats: {
-              contactCount: 150,
-              groupCount: 5,
-              campaignCount: 12,
-              messageCount: 1250,
-            },
-          },
-          {
-            id: "2",
-            name: "Marketing Digital",
-            description: "Campagnes de marketing digital",
-            createdAt: "2024-01-14T14:20:00Z",
-            updatedAt: "2024-01-14T14:20:00Z",
-            user: {
-              id: "user2",
-              name: "Marie Martin",
-              email: "marie.martin@example.com",
-            },
-            stats: {
-              contactCount: 300,
-              groupCount: 8,
-              campaignCount: 15,
-              messageCount: 2100,
-            },
-          },
-          {
-            id: "3",
-            name: "Ventes",
-            description: "Projet de prospection commerciale",
-            createdAt: "2024-01-13T09:15:00Z",
-            updatedAt: "2024-01-13T09:15:00Z",
-            user: {
-              id: "user3",
-              name: "Pierre Durand",
-              email: "pierre.durand@example.com",
-            },
-            stats: {
-              contactCount: 75,
-              groupCount: 3,
-              campaignCount: 5,
-              messageCount: 450,
-            },
-          },
-        ];
-
-        setProjects(mockProjects);
+        const response = await fetch('/api/admin/projects');
+        
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des projets');
+        }
+        
+        const projectsData = await response.json();
+        setProjects(projectsData);
       } catch (error) {
         console.error('Erreur lors du chargement des projets:', error);
         toast({
@@ -114,6 +56,7 @@ export default function AdminProjectsPage() {
           title: "Erreur",
           description: "Erreur lors du chargement des projets",
         });
+        setProjects([]);
       } finally {
         setIsLoading(false);
       }
@@ -123,9 +66,9 @@ export default function AdminProjectsPage() {
   }, [toast]);
 
   const filteredProjects = projects.filter(project =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    project.sender_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.user.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (dateString: string) => {
@@ -138,68 +81,82 @@ export default function AdminProjectsPage() {
 
   const columns: ColumnDef<Project>[] = [
     {
-      accessorKey: "name",
+      accessorKey: "sender_name",
       header: "Nom du projet",
       cell: ({ row }) => (
-        <div>
-          <div className="font-medium">{row.getValue("name")}</div>
-          {row.original.description && (
-            <div className="text-sm text-gray-500">{row.original.description}</div>
-          )}
+        <div className="flex items-center gap-2">
+          <Folder className="w-4 h-4 text-blue-500" />
+          <div className="font-medium">{row.getValue("sender_name")}</div>
         </div>
       ),
     },
     {
-      accessorKey: "user",
+      accessorKey: "userName",
       header: "Créateur",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
             <span className="text-white text-xs font-bold">
-              {row.original.user.name.charAt(0)}
+              {row.original.userName.charAt(0)}
             </span>
           </div>
           <div>
-            <div className="text-sm font-medium">{row.original.user.name}</div>
-            <div className="text-xs text-gray-500">{row.original.user.email}</div>
+            <div className="text-sm font-medium">{row.original.userName}</div>
+            <div className="text-xs text-gray-500">{row.original.user}</div>
           </div>
         </div>
       ),
     },
     {
-      accessorKey: "stats",
+      accessorKey: "status",
+      header: "Statut",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string;
+        const statusColors = {
+          'ACTIVE': 'text-green-600 bg-green-50',
+          'PENDING': 'text-orange-600 bg-orange-50',
+          'SUSPENDED': 'text-red-600 bg-red-50',
+          'REJECTED': 'text-gray-600 bg-gray-50',
+        };
+        const statusLabels = {
+          'ACTIVE': 'Actif',
+          'PENDING': 'En attente',
+          'SUSPENDED': 'Suspendu',
+          'REJECTED': 'Rejeté',
+        };
+        return (
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status as keyof typeof statusColors] || 'text-gray-600 bg-gray-50'}`}>
+            {statusLabels[status as keyof typeof statusLabels] || status}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "campaigns",
       header: "Statistiques",
       cell: ({ row }) => {
-        const stats = row.getValue("stats") as Project["stats"];
+        const project = row.original;
         return (
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="flex items-center gap-1">
               <User className="w-3 h-3 text-blue-500" />
-              <span>{stats.contactCount}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Users2 className="w-3 h-3 text-green-500" />
-              <span>{stats.groupCount}</span>
+              <span>{project.phonebooks} phonebooks</span>
             </div>
             <div className="flex items-center gap-1">
               <MessageSquare className="w-3 h-3 text-purple-500" />
-              <span>{stats.campaignCount}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <BarChart3 className="w-3 h-3 text-orange-500" />
-              <span>{stats.messageCount}</span>
+              <span>{project.campaigns} campagnes</span>
             </div>
           </div>
         );
       },
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "created_at",
       header: "Créé le",
       cell: ({ row }) => (
         <div className="flex items-center gap-1 text-sm">
           <Calendar className="w-4 h-4 text-gray-400" />
-          {formatDate(row.getValue("createdAt"))}
+          {formatDate(row.getValue("created_at"))}
         </div>
       ),
     },
@@ -251,21 +208,31 @@ export default function AdminProjectsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total contacts</CardTitle>
+            <CardTitle className="text-sm font-medium">Projets actifs</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">
-              {projects.reduce((sum, project) => sum + project.stats.contactCount, 0)}
+            <div className="text-2xl font-bold text-green-600">
+              {projects.filter(p => p.status === 'ACTIVE').length}
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total groupes</CardTitle>
+            <CardTitle className="text-sm font-medium">En attente</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {projects.reduce((sum, project) => sum + project.stats.groupCount, 0)}
+            <div className="text-2xl font-bold text-orange-600">
+              {projects.filter(p => p.status === 'PENDING').length}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total phonebooks</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">
+              {projects.reduce((sum, project) => sum + project.phonebooks, 0)}
             </div>
           </CardContent>
         </Card>
@@ -275,17 +242,7 @@ export default function AdminProjectsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">
-              {projects.reduce((sum, project) => sum + project.stats.campaignCount, 0)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total messages</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-600">
-              {projects.reduce((sum, project) => sum + project.stats.messageCount, 0)}
+              {projects.reduce((sum, project) => sum + project.campaigns, 0)}
             </div>
           </CardContent>
         </Card>

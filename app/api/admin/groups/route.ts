@@ -1,59 +1,78 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@/generated/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const groups = await prisma.group.findMany({
       include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         contacts: {
           select: {
-            contact_id: true,
-          }
+            contact: {
+              select: {
+                contact_id: true,
+                phonebook: {
+                  select: {
+                    project: {
+                      select: {
+                        project_id: true,
+                        sender_name: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         campaigns: {
           select: {
             campaign_id: true,
-            project: {
-              select: {
-                user: {
-                  select: {
-                    email: true
-                  }
-                }
-              }
-            }
-          }
-        }
+          },
+        },
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: "desc",
       },
     });
 
-    // Transformer les données pour correspondre au format attendu par le frontend
-    const formattedGroups = groups.map((group) => ({
-      group_id: group.group_id,
-      name: group.name,
-      description: group.description || '',
-      members: group.contacts.length,
-      createdAt: new Date(group.created_at).toLocaleDateString('fr-FR'),
-      campaigns: group.campaigns.length,
-      users: [...new Set(group.campaigns.map(c => c.project.user.email))]
-    }));
+    // Transformer les données pour correspondre à l'interface attendue
+    const transformedGroups = groups.map((group) => {
+      // Récupérer le projet associé (via le premier contact)
+      const project = group.contacts[0]?.contact.phonebook?.project;
 
-    return NextResponse.json(formattedGroups);
+      return {
+        id: group.group_id,
+        name: group.name,
+        description: group.description,
+        createdAt: group.created_at.toISOString(),
+        updatedAt: group.updated_at.toISOString(),
+        user: {
+          id: group.user.id,
+          name: group.user.name || "Utilisateur",
+          email: group.user.email,
+        },
+        project: {
+          id: project?.project_id || "",
+          name: project?.sender_name || "Aucun projet",
+        },
+        contactCount: group.contacts.length,
+        campaignCount: group.campaigns.length,
+      };
+    });
+
+    return NextResponse.json(transformedGroups);
   } catch (error) {
-    console.error('Erreur lors de la récupération des groupes:', error);
+    console.error("Erreur lors de la récupération des groupes:", error);
     return NextResponse.json(
-      { 
-        error: 'Erreur lors de la récupération des groupes',
-        details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
-      },
+      { error: "Erreur lors de la récupération des groupes" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
