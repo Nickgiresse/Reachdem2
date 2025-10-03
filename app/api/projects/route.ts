@@ -23,6 +23,7 @@ export async function GET() {
       select: {
         project_id: true,
         sender_name: true,
+        status: true,
         created_at: true,
       },
       orderBy: {
@@ -35,7 +36,7 @@ export async function GET() {
       project_id: project.project_id,
       sender_name: project.sender_name,
       created_at: project.created_at,
-      is_active: false, // Par défaut, les projets ne sont pas actifs
+      is_active: project.status === 'ACTIVE', // Vérifier si le statut est ACTIVE
     }));
 
     return NextResponse.json(formattedProjects);
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
       project_id: project.project_id,
       sender_name: project.sender_name,
       created_at: project.created_at,
-      is_active: false,
+      is_active: project.status === 'ACTIVE',
     };
 
     return NextResponse.json(formattedProject, { status: 201 });
@@ -93,6 +94,64 @@ export async function POST(request: NextRequest) {
     console.error('Erreur lors de la création du projet:', error);
     return NextResponse.json(
       { error: 'Erreur lors de la création du projet' },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    // Vérifier l'authentification
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: "Non authentifié" },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const projectId = searchParams.get('project_id');
+
+    if (!projectId) {
+      return NextResponse.json(
+        { error: 'ID du projet requis' },
+        { status: 400 }
+      );
+    }
+
+    // Vérifier que le projet appartient à l'utilisateur connecté
+    const project = await prisma.project.findFirst({
+      where: {
+        project_id: projectId,
+        user_id: currentUser.id
+      }
+    });
+
+    if (!project) {
+      return NextResponse.json(
+        { error: 'Projet non trouvé ou non autorisé' },
+        { status: 404 }
+      );
+    }
+
+    // Supprimer le projet (cascade supprimera les campagnes et messages associés)
+    await prisma.project.delete({
+      where: {
+        project_id: projectId
+      }
+    });
+
+    return NextResponse.json(
+      { message: 'Projet supprimé avec succès' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Erreur lors de la suppression du projet:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la suppression du projet' },
       { status: 500 }
     );
   } finally {

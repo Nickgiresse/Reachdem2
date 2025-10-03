@@ -8,6 +8,7 @@ import {
   Copy,
   Download,
   QrCode,
+  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -56,6 +57,9 @@ export default function Projet() {
   const [detailProject, setDetailProject] = useState<Project | null>(null);
   const [isRechargeDialogOpen, setIsRechargeDialogOpen] = useState(false);
   const [rechargeProject, setRechargeProject] = useState<Project | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteProject, setDeleteProject] = useState<Project | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { toast } = useToast();
   const notification = useNotification();
@@ -177,6 +181,53 @@ export default function Projet() {
       title: "Erreur de rechargement",
       description: error.message || "Une erreur est survenue lors du rechargement",
     });
+  };
+
+  // Fonction pour ouvrir le dialog de suppression
+  const handleDeleteProject = (project: Project) => {
+    setDeleteProject(project);
+    setIsDeleteDialogOpen(true);
+  };
+
+  // Fonction pour confirmer la suppression
+  const handleConfirmDelete = async () => {
+    if (!deleteProject) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/projects?project_id=${deleteProject.project_id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Supprimer le projet de la liste locale
+        setProjects(prev => prev.filter(p => p.project_id !== deleteProject.project_id));
+        
+        toast({
+          title: "Succès",
+          description: "Projet supprimé avec succès",
+        });
+        
+        setIsDeleteDialogOpen(false);
+        setDeleteProject(null);
+      } else {
+        const error = await response.json();
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: error.error || "Erreur lors de la suppression du projet",
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression du projet:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression du projet",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
 
@@ -364,7 +415,7 @@ export default function Projet() {
                       Voir détail
                     </Button>
                     
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       <Button
                         size="sm"
                         className={`${
@@ -386,6 +437,16 @@ export default function Projet() {
                       >
                         <QrCode className="w-4 h-4 mr-1" />
                         Recharger
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-red-500 text-red-600 hover:bg-red-50"
+                        onClick={() => handleDeleteProject(project)}
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Supprimer
                       </Button>
                     </div>
 
@@ -624,6 +685,19 @@ export default function Projet() {
                       <QrCode className="w-4 h-4 mr-2" />
                       Recharger
                     </Button>
+
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-red-500 text-red-600 hover:bg-red-50"
+                      onClick={() => {
+                        setIsDetailDialogOpen(false);
+                        handleDeleteProject(detailProject);
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Supprimer
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -636,6 +710,41 @@ export default function Projet() {
               onClick={() => setIsDetailDialogOpen(false)}
             >
               Fermer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de confirmation de suppression */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="w-full max-w-md bg-white p-6 dark:bg-zinc-900">
+          <DialogHeader>
+            <DialogTitle className="text-zinc-900 dark:text-white flex items-center gap-2">
+              <Trash2 className="w-5 h-5 text-red-500" />
+              Supprimer le projet
+            </DialogTitle>
+            <DialogDescription className="text-zinc-600 dark:text-zinc-400">
+              {deleteProject && `Êtes-vous sûr de vouloir supprimer le projet "${deleteProject.sender_name}" ? Cette action est irréversible et supprimera également toutes les campagnes et messages associés.`}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mt-6 flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setDeleteProject(null);
+              }}
+              disabled={isDeleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Suppression...' : 'Supprimer'}
             </Button>
           </div>
         </DialogContent>
